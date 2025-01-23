@@ -1,0 +1,126 @@
+{% extends 'todo_app/auth_base.html' %}
+
+{% block title %}ログイン{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h2 class="mb-4" style="color: #654321; text-align: center;">ログイン</h2>
+    
+    {% if messages %}
+        {% comment %} {% for message in messages %} <div class="alert alert-info">{{ message }}</div> {% endfor %} {% endcomment %}
+    {% endif %}
+    
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-floating">
+            <input type="text" class="form-control" id="username" name="username" placeholder="ユーザー名">
+            <label for="username">ユーザー名</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="パスワード">
+            <label for="password">パスワード</label>
+        </div>
+        
+        <button type="submit" class="auth-button">
+            <i class="fas fa-sign-in-alt"></i> ログイン
+        </button>
+    </form>
+    
+    <div class="mt-4 text-center">
+        <p class="text-muted">
+            アカウントをお持ちでない方は
+        </p>
+        <a href="{% url 'register' %}" class="text-decoration-none" style="color: #654321;">
+            こちらから新規登録
+        </a>
+    </div>
+</div>
+
+<style>
+    /* エラーポップアップのスタイル */
+    .error-popup {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--sticky-yellow);
+        padding: 15px 20px;
+        border-radius: 4px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slideDown 0.5s ease-out;
+    }
+
+    .error-content {
+        position: relative;
+        padding-right: 20px;
+    }
+
+    .close-error {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: none;
+        border: none;
+        color: #654321;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1.1em;
+    }
+
+    .error-message {
+        color: #654321;
+        font-weight: 500;
+    }
+
+    .error-message i {
+        margin-right: 8px;
+        color: #dc3545;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translate(-50%, -100%);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+    }
+
+    /* ナイトモード対応 */
+    .night-mode .error-popup {
+        background-color: #2c2c2c;
+    }
+
+    .night-mode .error-message,
+    .night-mode .close-error {
+        color: #ffd700;
+    }
+
+    .night-mode .error-message i {
+        color: #ff6b6b;
+    }
+</style>
+
+<script>
+    // 3秒後に自動的にポップアップを閉じる
+    setTimeout(function() {
+        const popup = document.getElementById('errorPopup');
+        if (popup) {
+            popup.style.opacity = '0';
+            setTimeout(() => popup.style.display = 'none', 500);
+        }
+    }, 3000);
+
+    // 閉じるボタンの処理
+    function closeErrorPopup() {
+        const popup = document.getElementById('errorPopup');
+        if (popup) {
+            popup.style.opacity = '0';
+            setTimeout(() => popup.style.display = 'none', 500);
+        }
+    }
+</script>
+{% endblock %} 

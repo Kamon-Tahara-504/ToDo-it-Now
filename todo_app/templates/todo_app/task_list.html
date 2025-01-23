@@ -1,0 +1,541 @@
+{% extends 'todo_app/base.html' %}
+
+{% block title %}未完了タスク{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4 d-flex justify-content-between align-items-center" id="taskSection">
+        <div class="d-flex align-items-center">
+            <span class="me-3">未完了タスク</span>
+            <div class="btn-group">
+                <a href="?sort=created_desc" class="btn {% if current_sort == 'created_desc' %}btn-primary{% else %}btn{% endif %}">
+                    <i class="fas fa-sort-amount-down"></i> 新しい順
+                </a>
+                <a href="?sort=created_asc" class="btn {% if current_sort == 'created_asc' %}btn-primary{% else %}btn{% endif %}">
+                    <i class="fas fa-sort-amount-up"></i> 古い順
+                </a>
+                <a href="?sort=deadline" class="btn {% if current_sort == 'deadline' %}btn-primary{% else %}btn{% endif %}">
+                    <i class="fas fa-clock"></i> 期限順
+                </a>
+            </div>
+        </div>
+        <a href="{% url 'add_task' %}" class="btn" style="background-color: #654321; color: white; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+            <i class="fas fa-plus"></i> 新規タスク作成
+        </a>
+    </h2>
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="task-card {{ task.color }} tape-design" style="background-color: {{ task.color }};">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="task-content">
+                        <h5 style="color: #000000; margin-bottom: 5px;">{{ task.title }}</h5>
+                        <small style="color: #000000;">達成期限: {{ task.deadline|date:"Y年n月j日 H:i" }}</small>
+                        
+                    </div>
+                    <div class="task-actions">
+                        <form action="{% url 'share_task' task.id %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-secondary rounded-circle {% if task.shared_with.exists %}shared-active{% endif %}" 
+                                    style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </form>
+                        <a href="{% url 'edit_task' task.id %}" class="btn btn-outline-primary rounded-circle" 
+                           style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'mark_task_as_completed' task.id %}" class="btn btn-outline-success rounded-circle" 
+                           style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <i class="fas fa-check"></i>
+                        </a>
+                        <a href="{% url 'delete_task' task.id %}" class="btn btn-outline-danger rounded-circle" 
+                           style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="task-details" style="display: none; margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.3); border-radius: 4px;">
+                    <p style="color: var(--text-color);"><strong>メモ:</strong> 
+                        {% if task.description|length > 0 %}
+                            {{ task.description }}
+                        {% else %}
+                            <span style="color: var(--text-color); font-style: italic;">メモは入力されていません</span>
+                        {% endif %}
+                    </p>
+                    <p style="color: var(--text-color);"><strong>作成日:</strong> {{ task.created_at|date:"Y年n月j日 H:i" }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-message">
+            <p>タスクはありません。</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- 共有/共有解除確認モーダル -->
+<div class="validation-modal" id="shareModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item" id="shareModalMessage">
+                <!-- メッセージは動的に変更 -->
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmShare">
+                <i class="fas fa-check"></i> <span id="confirmButtonText">共有する</span>
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelShare">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- タスク完了確認モーダル -->
+<div class="validation-modal" id="completeModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item">
+                このタスクを完了にしますか？
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmComplete">
+                <i class="fas fa-check"></i> 完了にする
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelComplete">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- タスク削除確認モーダル -->
+<div class="validation-modal" id="deleteModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item">
+                このタスクを削除しますか？
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmDelete">
+                <i class="fas fa-check"></i> 削除する
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelDelete">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .task-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: none;
+        border-radius: 0;
+        padding: 15px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-card:hover {
+        transform: scale(1.02) rotate(0deg) !important;
+        box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+        z-index: 3;
+    }
+
+    .task-details {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .task-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        z-index: 4;
+    }
+
+    .task-content {
+        flex-grow: 1;
+    }
+
+    /* タスクアクションボタンのホバー時にカード全体のホバーと競合しないように */
+    .task-actions a {
+        position: relative;
+        z-index: 4;
+    }
+
+    .task-actions a:hover {
+        transform: none;
+    }
+
+    /* 並び替えボタンのスタイル */
+    .btn-group {
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .btn-group .btn {
+        background-color: #F5F5DC;  /* 薄い茶色の背景 */
+        border-color: #654321;      /* 濃い茶色のボーダー */
+        color: #654321;            /* 茶色のテキスト */
+    }
+
+    .btn-group .btn.btn-primary {
+        background-color: #654321;  /* アクティブな時は濃い茶色 */
+        border-color: #654321;
+        color: #F5F5DC;            /* 薄い茶色のテキスト */
+    }
+
+    .btn-group .btn:hover {
+        background-color: #654321;  /* ホバー時は中間の茶色 */
+        border-color: #654321;
+        color: #F5F5DC;
+        opacity: 0.9;
+    }
+
+    /* ナイトモード対応 */
+    .night-mode .btn-group .btn {
+        background-color: #2c2c2c;
+        border-color: #ffd700;
+        color: #ffd700;
+    }
+
+    .night-mode .btn-group .btn.btn-primary {
+        background-color: #ffd700;
+        border-color: #ffd700;
+        color: #2c2c2c;
+    }
+
+    .night-mode .btn-group .btn:hover {
+        background-color: #ffd700;
+        border-color: #ffd700;
+        color: #2c2c2c;
+        opacity: 0.9;
+    }
+
+    /* 空の状態メッセージのスタイル */
+    .empty-message {
+        background-color: var(--sticky-yellow);
+        padding: 15px 20px;
+        border-radius: 2px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        transform: rotate(-1deg);
+        width: fit-content;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    .empty-message::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+        height: 12px;
+        background-color: rgba(222, 184, 135, 0.5);
+        border-radius: 2px;
+    }
+
+    .empty-message p {
+        color: #654321;
+        margin: 0;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    /* ナイトモード対応 */
+    .night-mode .empty-message {
+        background-color: #2c2c2c;
+    }
+
+    .night-mode .empty-message::before {
+        background-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .night-mode .empty-message p {
+        color: #ffd700;
+    }
+    
+    .shared-active {
+        background-color: #6c757d !important;
+        color: white !important;
+        border-color: #6c757d !important;
+    }
+
+    .shared-active:hover {
+        background-color: #5a6268 !important;
+        border-color: #5a6268 !important;
+    }
+
+    /* バリデーションモーダルのスタイル */
+    .validation-modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050;
+    }
+
+    .validation-content {
+        background-color: #fff5e6;
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+        width: 90%;
+        max-width: 400px;
+    }
+
+    .close-validation {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        cursor: pointer;
+        color: #654321;
+    }
+
+    .validation-section {
+        margin-bottom: 20px;
+    }
+
+    .validation-section h6 {
+        color: #654321;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .validation-item {
+        color: #654321;
+        margin-left: 20px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-create, .btn-cancel {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-create {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* 完了ボタンのホバースタイル */
+    .btn-outline-success:hover {
+        background-color: #28a745 !important;
+        color: white !important;
+        border-color: #28a745 !important;
+    }
+
+    /* 編集ボタンのホバースタイル */
+    .btn-outline-primary:hover {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border-color: #0d6efd !important;
+    }
+
+    /* 共有ボタンのホバースタイル */
+    .btn-outline-dark:hover {
+        background-color: #000000 !important;
+        color: white !important;
+        border-color: #000000 !important;
+    }
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.task-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            if (!e.target.closest('.task-actions')) {
+                const details = this.querySelector('.task-details');
+                if (details) {
+                    if (details.style.display === 'none') {
+                        details.style.display = 'block';
+                        details.style.opacity = '0';
+                        setTimeout(() => {
+                            details.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        details.style.opacity = '0';
+                        setTimeout(() => {
+                            details.style.display = 'none';
+                        }, 300);
+                    }
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('.task-actions a').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    });
+});
+
+function applyDesign() {
+    const currentDesign = localStorage.getItem('card-design') || 'sticky';
+    const taskCards = document.querySelectorAll('.task-card');
+    taskCards.forEach(card => {
+        card.classList.remove('tape-design', 'sticky-note');
+        card.classList.add(currentDesign === 'tape' ? 'tape-design' : 'sticky-note');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', applyDesign);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const shareModal = document.getElementById('shareModal');
+    const shareButtons = document.querySelectorAll('.task-actions button');
+    const shareModalMessage = document.getElementById('shareModalMessage');
+    const confirmButtonText = document.getElementById('confirmButtonText');
+    let currentButton = null;
+
+    // 共有ボタンのクリックイベント
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentButton = button;
+            const isShared = button.classList.contains('shared-active');
+            
+            // メッセージとボタンテキストを設定
+            if (isShared) {
+                shareModalMessage.textContent = '・このタスクの共有を解除しますか？';
+                confirmButtonText.textContent = '解除する';
+            } else {
+                shareModalMessage.textContent = '・このタスクを共有しますか？';
+                confirmButtonText.textContent = '共有する';
+            }
+            
+            shareModal.style.display = 'flex';
+        });
+    });
+
+    // 確認ボタンのクリックイベント
+    document.getElementById('confirmShare').addEventListener('click', function() {
+        if (currentButton) {
+            currentButton.closest('form').submit();
+        }
+        shareModal.style.display = 'none';
+    });
+
+    // キャンセルボタンのクリックイベント
+    document.getElementById('cancelShare').addEventListener('click', function() {
+        shareModal.style.display = 'none';
+    });
+
+    // 閉じるボタンのクリックイベント
+    document.querySelector('.close-validation').addEventListener('click', function() {
+        shareModal.style.display = 'none';
+    });
+
+    // モーダル外クリックのイベントを防止
+    shareModal.addEventListener('click', function(e) {
+        if (e.target === shareModal) {
+            e.stopPropagation();
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // タスク完了モーダルの処理
+    const completeModal = document.getElementById('completeModal');
+    const completeButtons = document.querySelectorAll('.btn-outline-success');
+    let currentCompleteUrl = null;
+
+    completeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            currentCompleteUrl = this.href;
+            completeModal.style.display = 'flex';
+        });
+    });
+
+    document.getElementById('confirmComplete').addEventListener('click', function() {
+        if (currentCompleteUrl) {
+            window.location.href = currentCompleteUrl;
+        }
+        completeModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelComplete').addEventListener('click', function() {
+        completeModal.style.display = 'none';
+    });
+
+    // タスク削除モーダルの処理を修正
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteButtons = document.querySelectorAll('.btn-outline-danger');
+    let currentDeleteUrl = null;
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            currentDeleteUrl = this.href;
+            deleteModal.style.display = 'flex';
+        });
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (currentDeleteUrl) {
+            window.location.href = currentDeleteUrl;
+        }
+        deleteModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        deleteModal.style.display = 'none';
+    });
+
+    // 閉じるボタンの処理を追加
+    document.querySelectorAll('.close-validation').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('.validation-modal').style.display = 'none';
+        });
+    });
+});
+
+</script>
+{% endblock %}

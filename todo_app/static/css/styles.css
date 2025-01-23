@@ -1,0 +1,245 @@
+/* テープデザイン */
+.tape-design {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.tape-design::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+/* 通常時のテープデザインの色 */
+.tape-design:nth-child(5n+1)::before {
+    background-color: var(--sticky-yellow);
+}
+.tape-design:nth-child(5n+2)::before {
+    background-color: var(--sticky-pink);
+}
+.tape-design:nth-child(5n+3)::before {
+    background-color: var(--sticky-blue);
+}
+.tape-design:nth-child(5n+4)::before {
+    background-color: var(--sticky-green);
+}
+.tape-design:nth-child(5n+5)::before {
+    background-color: var(--sticky-purple);
+}
+
+.tape-design::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+/* ナイトモード対応 */
+.night-mode .tape-design {
+    background-color: #2c2c2c;
+}
+
+.night-mode .tape-design::before {
+    background-color: #f0ad4e;
+}
+
+/* 付箋デザイン */
+.sticky-note {
+    background-color: var(--sticky-yellow);
+    border: none;
+    border-radius: 0;
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    z-index: 2;
+    transform: rotate(-1deg);
+}
+
+.sticky-note:nth-child(5n+1) {
+    background-color: var(--sticky-yellow);
+    transform: rotate(-1deg);
+}
+.sticky-note:nth-child(5n+2) {
+    background-color: var(--sticky-pink);
+    transform: rotate(1deg);
+}
+.sticky-note:nth-child(5n+3) {
+    background-color: var(--sticky-blue);
+    transform: rotate(-0.5deg);
+}
+.sticky-note:nth-child(5n+4) {
+    background-color: var(--sticky-green);
+    transform: rotate(0.5deg);
+}
+.sticky-note:nth-child(5n+5) {
+    background-color: var(--sticky-purple);
+    transform: rotate(-0.8deg);
+}
+
+/* ナイトモード対応 */
+.night-mode .sticky-note {
+    background-color: #2c2c2c;
+}
+
+/* 共通のホバーエフェクト */
+.sticky-note:hover,
+.tape-design:hover {
+    transform: scale(1.02) rotate(0deg);
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+    z-index: 3;
+}
+
+.task-details {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+.task-details.show {
+    opacity: 1;
+}
+
+.task-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: 0;
+    padding: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    user-select: none;
+}
+
+.task-content {
+    user-select: none; /* テキストの選択を無効にする */
+}
+
+/* 追加: タスク詳細の表示制御 */
+.task-card .task-details {
+    display: none;
+    position: relative;
+    z-index: 1;
+}
+
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .form-label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 0 5px;
+    color: #666;
+    transition: all 0.2s ease;
+    pointer-events: none;
+  }
+  
+  /* 入力欄がフォーカスされた時、または入力値がある時のラベルスタイル */
+  .form-input:focus ~ .form-label,
+  .form-input:not(:placeholder-shown) ~ .form-label {
+    top: 0;
+    font-size: 12px;
+    color: #333;
+  }
+  
+  /* プレースホルダーを非表示にする */
+  .form-input::placeholder {
+    opacity: 0;
+  }
+
+.form-floating {
+  position: relative;
+  margin-bottom: 1rem;
+  width: 300px;
+}
+
+.form-floating input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.form-floating label {
+  position: absolute;
+  top: 0;
+  left: 0.75rem;
+  height: 100%;
+  padding: 0.5rem 0;
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+  font-size: 14px;
+}
+
+/* 入力欄がフォーカスされた時、または値が入力されている時のラベルスタイル */
+.form-floating input:focus ~ label,
+.form-floating input:not(:placeholder-shown) ~ label {
+  transform: scale(0.85) translateY(-0.5rem);
+  background: white;
+  padding: 0 0.25rem;
+}
+
+/* プレースホルダーを透明にする */
+.form-floating input::placeholder {
+  color: transparent;
+}
+
+/* 共有タスク用の追加スタイル */
+.shared-with {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.status-completed {
+    background-color: #4CAF50;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.status-incomplete {
+    background-color: #FFA726;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
