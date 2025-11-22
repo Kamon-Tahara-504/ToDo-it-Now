@@ -8,7 +8,6 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
     shared_with = models.ManyToManyField(User, related_name='shared_tasks', blank=True)
-    is_completed = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     completed_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # 作成日時

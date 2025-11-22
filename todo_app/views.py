@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import Task
 from .forms import TaskForm, UserRegisterForm
+from .decorators import login_required_with_cache
+from .utils import get_sorted_tasks, redirect_with_referer, set_no_cache_headers
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
@@ -17,19 +18,12 @@ def index(request):
         return redirect('task_list')  # ログイン済みの場合はタスク一覧へ
     return redirect('login')  # 未ログインの場合はログインページへ変更
 
-@login_required(login_url='login')  # 未ログインの場合は登録ページへリダイレクト
-@never_cache
+@login_required_with_cache
 def task_list(request):
     sort_by = request.GET.get('sort', 'created_desc')  # デフォルトは新しい順
     
     tasks = Task.objects.filter(completed=False, deadline__gte=timezone.now(), user=request.user)
-    
-    if sort_by == 'created_asc':
-        tasks = tasks.order_by('id')  # 古い順
-    elif sort_by == 'created_desc':
-        tasks = tasks.order_by('-id')  # 新しい順
-    elif sort_by == 'deadline':
-        tasks = tasks.order_by('deadline')  # 締切順
+    tasks = get_sorted_tasks(tasks, sort_by)
     
     context = {
         'tasks': tasks,
@@ -37,8 +31,7 @@ def task_list(request):
     }
     return render(request, 'todo_app/task_list.html', context)
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def add_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -54,19 +47,12 @@ def add_task(request):
         form = TaskForm()
     return render(request, 'todo_app/add_task.html', {'form': form})
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def completed_tasks(request):
     sort_by = request.GET.get('sort', 'created_desc')
     
     tasks = Task.objects.filter(completed=True, user=request.user)
-    
-    if sort_by == 'created_asc':
-        tasks = tasks.order_by('id')
-    elif sort_by == 'created_desc':
-        tasks = tasks.order_by('-id')
-    elif sort_by == 'deadline':
-        tasks = tasks.order_by('deadline')
+    tasks = get_sorted_tasks(tasks, sort_by)
     
     context = {
         'tasks': tasks,
@@ -74,8 +60,7 @@ def completed_tasks(request):
     }
     return render(request, 'todo_app/completed_tasks.html', context)
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def overdue_tasks_view(request):
     sort_by = request.GET.get('sort', 'created_desc')
     
@@ -84,13 +69,7 @@ def overdue_tasks_view(request):
         completed=False,
         user=request.user
     )
-    
-    if sort_by == 'created_asc':
-        overdue_tasks = overdue_tasks.order_by('id')
-    elif sort_by == 'created_desc':
-        overdue_tasks = overdue_tasks.order_by('-id')
-    elif sort_by == 'deadline':
-        overdue_tasks = overdue_tasks.order_by('deadline')
+    overdue_tasks = get_sorted_tasks(overdue_tasks, sort_by)
     
     context = {
         'overdue_tasks': overdue_tasks,
@@ -98,22 +77,16 @@ def overdue_tasks_view(request):
     }
     return render(request, 'todo_app/overdue_tasks.html', context)
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def mark_task_as_completed(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.completed = True
     task.completed_at = timezone.now()
     task.save()
     
-    # リファラー（前のページのURL）を取得
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return HttpResponseRedirect(referer)
-    return redirect('task_list')  # フォールバック
+    return redirect_with_referer(request, 'task_list')
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def task_detail(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     # リファラー（前のページのURL）を取得
@@ -133,20 +106,14 @@ def task_detail(request, task_id):
     }
     return render(request, 'todo_app/task_detail.html', context)
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.delete()
     
-    # リファラー（前のページのURL）を取得
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return HttpResponseRedirect(referer)
-    return redirect('task_list')  # フォールバック
+    return redirect_with_referer(request, 'task_list')
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def settings_view(request):
     return render(request, 'todo_app/settings.html')
 
@@ -182,9 +149,7 @@ def user_login(request):
         return redirect('task_list')
     
     response = render(request, 'todo_app/login.html')
-    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response['Pragma'] = 'no-cache'
-    response['Expires'] = '0'
+    response = set_no_cache_headers(response)
     
     if request.method == 'POST':
         username = request.POST['username']
@@ -205,13 +170,10 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     response = redirect('login')
-    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response['Pragma'] = 'no-cache'
-    response['Expires'] = '0'
+    response = set_no_cache_headers(response)
     return response
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
@@ -241,8 +203,7 @@ def shared_tasks(request):
         'tasks': tasks_with_deadline
     })
 
-@login_required(login_url='login')
-@never_cache
+@login_required_with_cache
 def share_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     
@@ -259,10 +220,7 @@ def share_task(request, task_id):
             task.shared_with.add(request.user)
             messages.success(request, "タスクが共有されました")
         
-        # リファラー（前のページのURL）を取得
-        referer = request.META.get('HTTP_REFERER')
-        if referer:
-            return HttpResponseRedirect(referer)
+        return redirect_with_referer(request, 'task_list')
     
     return redirect('task_list')
 
