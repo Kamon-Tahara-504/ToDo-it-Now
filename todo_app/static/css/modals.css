@@ -1,0 +1,140 @@
+/* バリデーションモーダルのスタイル */
+.validation-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.validation-content {
+    background-color: var(--modal-bg);
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+}
+
+.close-validation {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: var(--dark-brown);
+}
+
+.validation-section {
+    margin-bottom: 20px;
+}
+
+.validation-section h6 {
+    color: var(--dark-brown);
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.validation-item {
+    color: var(--dark-brown);
+    margin-left: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-create, .btn-cancel {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-create {
+    background-color: var(--btn-success);
+    color: white;
+}
+
+.btn-cancel {
+    background-color: var(--btn-danger);
+    color: white;
+}
+
+.btn-create:hover, .btn-cancel:hover {
+    opacity: 0.8;
+}
+
+/* ナイトモード対応 */
+.night-mode .validation-content {
+    background-color: var(--bg-dark);
+}
+
+.night-mode .validation-section {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.night-mode .validation-section h6 {
+    color: var(--night-gold);
+}
+
+.night-mode .validation-item {
+    color: var(--night-gold);
+}
+
+.night-mode .close-validation {
+    color: var(--night-gold);
+}
+
+/* add_task.html用の特別なスタイル */
+.validation-content.warning-modal {
+    background-color: var(--sticky-yellow);
+    width: 400px;
+    padding: 25px;
+}
+
+.validation-content.warning-modal .validation-section {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+.validation-content.warning-modal .validation-section h6 {
+    margin-bottom: 12px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.validation-content.warning-modal .validation-item {
+    margin-bottom: 5px;
+    color: #856404;
+    font-size: 1em;
+}
+
+.validation-content.warning-modal .modal-buttons {
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.validation-content.warning-modal .btn-create {
+    background-color: #198754;
+    padding: 8px 20px;
+    transition: opacity 0.3s;
+}
+
+.validation-content.warning-modal .btn-cancel {
+    padding: 8px 20px;
+    transition: opacity 0.3s;
+}
+

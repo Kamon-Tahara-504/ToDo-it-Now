@@ -1,0 +1,26 @@
+{% comment %}
+タスク完了確認モーダル共通パーツ
+使用方法: {% include 'todo_app/includes/modals/complete_modal.html' %}
+{% endcomment %}
+<div class="validation-modal" id="completeModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item">
+                このタスクを完了にしますか？
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmComplete">
+                <i class="fas fa-check"></i> 完了にする
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelComplete">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+

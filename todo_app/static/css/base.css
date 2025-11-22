@@ -1,0 +1,202 @@
+/* CSS変数定義 */
+:root {
+    --main-brown: #8B7355;
+    --light-brown: #F5F5DC;
+    --dark-brown: #654321;
+    --sticky-yellow: #fff8dc;
+    --sticky-pink: #ffe4e1;
+    --sticky-blue: #e6f3ff;
+    --sticky-green: #e8f5e9;
+    --sticky-purple: #f3e5f5;
+    
+    /* 背景色 */
+    --bg-light: #f5f5f5;
+    --bg-dark: #2c2c2c;
+    
+    /* ナイトモード色 */
+    --night-accent: #f0ad4e;
+    --night-gold: #ffd700;
+    
+    /* ボタン色 */
+    --btn-success: #28a745;
+    --btn-danger: #dc3545;
+    --btn-primary: #0d6efd;
+    
+    /* カラーピッカー色 */
+    --color-picker-1: #A8DADC;
+    --color-picker-2: #F1FAEE;
+    --color-picker-3: #F8EDDF;
+    --color-picker-4: #FFE156;
+    --color-picker-5: #D8B4A0;
+    --color-picker-6: #B9FBC0;
+    
+    /* その他 */
+    --text-black: #000000;
+    --text-gray: #666;
+    --border-color: #DEB887;
+    --modal-bg: #fff5e6;
+}
+
+body {
+    background-color: var(--bg-light);
+}
+
+/* サイドバー */
+.sidebar {
+    position: fixed;
+    height: 100vh;
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    width: 250px;
+    background-color: var(--light-brown);
+    z-index: 2;
+}
+
+/* 罫線用のオーバーレイを右側のみに */
+.notebook-overlay {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(var(--border-color) 1px, transparent 1px);
+    background-size: 100% 2em;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.task-card {
+    background-color: var(--light-brown);
+    border: none;
+    border-radius: 0;
+    padding: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    z-index: 2;
+    transform: rotate(-1deg);
+    color: var(--text-black);
+}
+
+.task-card:nth-child(5n+1) {
+    background-color: var(--sticky-yellow);
+    transform: rotate(-1deg);
+}
+.task-card:nth-child(5n+2) {
+    background-color: var(--sticky-pink);
+    transform: rotate(1deg);
+}
+.task-card:nth-child(5n+3) {
+    background-color: var(--sticky-blue);
+    transform: rotate(-0.5deg);
+}
+.task-card:nth-child(5n+4) {
+    background-color: var(--sticky-green);
+    transform: rotate(0.5deg);
+}
+.task-card:nth-child(5n+5) {
+    background-color: var(--sticky-purple);
+    transform: rotate(-0.8deg);
+}
+
+.task-card:hover {
+    transform: scale(1.02) rotate(0deg);
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+    z-index: 3;
+}
+
+.main-content {
+    margin-left: 270px;
+    padding: 20px;
+    max-width: calc(100% - 290px);
+    position: relative;
+    z-index: 2;
+}
+
+.nav-link {
+    border-radius: 25px;
+    padding: 10px 20px;
+    margin: 5px 0;
+    color: var(--dark-brown);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--dark-brown);
+    color: var(--bg-light);
+}
+
+.container {
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
+}
+
+.text-inherit {
+    color: inherit !important;
+}
+
+/* ヘッダーのスタイル */
+h2, h3 {
+    color: var(--dark-brown);
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
+}
+
+/* サイドバーのタイトルも太文字に */
+.sidebar h3 {
+    font-weight: 700;
+}
+
+/* メインコンテンツの見出しも太文字に */
+.main-content h2 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* ボタンのスタイル */
+.btn-outline-success {
+    background-color: transparent;
+    border-width: 1px;
+}
+
+.btn-outline-success:hover {
+    background-color: rgba(139, 115, 85, 0.2);
+    color: var(--main-brown);
+}
+
+/* 完了バッジのスタイル */
+.badge.bg-success {
+    background-color: var(--main-brown) !important;
+}
+
+/* タスクの内容部分のスタイル */
+.task-content {
+    padding: 0 5px;
+}
+
+/* タスクのタイトルスタイル */
+.task-card h5 {
+    margin-bottom: 8px;
+    color: var(--dark-brown);
+}
+
+/* 締切日のスタイル */
+.task-card small {
+    color: var(--dark-brown);
+}
+
+/* 追加: 設定メニューのスタイル */
+#settings-menu {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 250px;
+    background-color: var(--light-brown);
+    border-left: 1px solid var(--border-color);
+    padding: 20px;
+    z-index: 2;
+}
+

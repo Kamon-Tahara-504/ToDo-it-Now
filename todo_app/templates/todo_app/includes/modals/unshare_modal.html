@@ -1,0 +1,26 @@
+{% comment %}
+共有解除確認モーダル共通パーツ
+使用方法: {% include 'todo_app/includes/modals/unshare_modal.html' %}
+{% endcomment %}
+<div class="validation-modal" id="unshareModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item">
+                ・このタスクの共有を解除しますか？
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmUnshare">
+                <i class="fas fa-check"></i> 解除する
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelUnshare">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+

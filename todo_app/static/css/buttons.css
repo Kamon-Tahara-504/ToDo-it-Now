@@ -1,0 +1,102 @@
+/* タスクアクションボタン */
+.task-action-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.task-action-btn:last-child {
+    margin-right: 0;
+}
+
+/* 新規タスク作成ボタン */
+.btn-create-task {
+    background-color: var(--dark-brown);
+    color: white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 並び替えボタンのスタイル */
+.btn-group {
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-group .btn {
+    background-color: var(--light-brown);
+    border-color: var(--dark-brown);
+    color: var(--dark-brown);
+}
+
+.btn-group .btn.btn-primary {
+    background-color: var(--dark-brown);
+    border-color: var(--dark-brown);
+    color: var(--light-brown);
+}
+
+.btn-group .btn:hover {
+    background-color: var(--dark-brown);
+    border-color: var(--dark-brown);
+    color: var(--light-brown);
+    opacity: 0.9;
+}
+
+/* ナイトモード対応 */
+.night-mode .btn-group .btn {
+    background-color: var(--bg-dark);
+    border-color: var(--night-gold);
+    color: var(--night-gold);
+}
+
+.night-mode .btn-group .btn.btn-primary {
+    background-color: var(--night-gold);
+    border-color: var(--night-gold);
+    color: var(--bg-dark);
+}
+
+.night-mode .btn-group .btn:hover {
+    background-color: var(--night-gold);
+    border-color: var(--night-gold);
+    color: var(--bg-dark);
+    opacity: 0.9;
+}
+
+/* ボタンのホバースタイル */
+.btn-outline-success:hover {
+    background-color: var(--btn-success) !important;
+    color: white !important;
+    border-color: var(--btn-success) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--btn-primary) !important;
+    color: white !important;
+    border-color: var(--btn-primary) !important;
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--btn-danger) !important;
+    color: white !important;
+    border-color: var(--btn-danger) !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d !important;
+    color: white !important;
+    border-color: #6c757d !important;
+}
+
+/* 共有ボタンのアクティブスタイル */
+.shared-active {
+    background-color: #6c757d !important;
+    color: white !important;
+    border-color: #6c757d !important;
+}
+
+.shared-active:hover {
+    background-color: #5a6268 !important;
+    border-color: #5a6268 !important;
+}
+

@@ -1,0 +1,28 @@
+{% comment %}
+タスクカード共通パーツ
+使用方法: 
+{% include 'todo_app/includes/task_card.html' with task=task show_share=True show_edit=True show_complete=True show_delete=True show_completed_at=False %}
+{% endcomment %}
+<div class="task-card {{ task.color }} tape-design" style="background-color: {{ task.color }};">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="task-content">
+            <h5 style="color: var(--text-black); margin-bottom: 5px;">{{ task.title }}</h5>
+            <small style="color: var(--text-black);">達成期限: {{ task.deadline|date:"Y年n月j日 H:i" }}</small>
+        </div>
+        {% include 'todo_app/includes/task_action_buttons.html' with task=task show_share=show_share|default:False show_edit=show_edit|default:False show_complete=show_complete|default:False show_delete=show_delete|default:False %}
+    </div>
+    <div class="task-details" style="display: none; margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.3); border-radius: 4px;">
+        <p style="color: var(--text-color);"><strong>メモ:</strong> 
+            {% if task.description|length > 0 %}
+                {{ task.description }}
+            {% else %}
+                <span style="color: var(--text-color); font-style: italic;">メモは入力されていません</span>
+            {% endif %}
+        </p>
+        <p style="color: var(--text-color);"><strong>作成日:</strong> {{ task.created_at|date:"Y年n月j日 H:i" }}</p>
+        {% if show_completed_at and task.completed_at %}
+            <p style="color: var(--text-color);"><strong>完了日:</strong> {{ task.completed_at|date:"Y年n月j日 H:i" }}</p>
+        {% endif %}
+    </div>
+</div>
+

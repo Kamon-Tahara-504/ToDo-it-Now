@@ -1,0 +1,26 @@
+{% comment %}
+タスク削除確認モーダル共通パーツ
+使用方法: {% include 'todo_app/includes/modals/delete_modal.html' %}
+{% endcomment %}
+<div class="validation-modal" id="deleteModal" style="display: none;">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>注意</h6>
+            <div class="validation-item">
+                このタスクを削除しますか？
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-create" id="confirmDelete">
+                <i class="fas fa-check"></i> 削除する
+            </button>
+            <button type="button" class="btn btn-cancel" id="cancelDelete">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+
