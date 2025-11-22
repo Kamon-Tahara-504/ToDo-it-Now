@@ -1,5 +1,13 @@
 /* 設定画面固有のスタイル */
 
+.settings-section {
+    margin-top: 30px;
+}
+
+.night-mode-toggle-btn {
+    background-color: var(--sticky-yellow);
+}
+
 .design-options {
     display: flex;
     gap: 20px;
