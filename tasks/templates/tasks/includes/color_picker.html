@@ -1,0 +1,31 @@
+{% comment %}
+色選択UI共通パーツ
+使用方法: {% include 'tasks/includes/color_picker.html' with current_color=task.color|default:'#ffffff' %}
+{% endcomment %}
+<div class="mb-3">
+    <label for="color" style="color: var(--dark-brown);">色を選択 :</label><br>
+    <div class="btn-group" role="group" aria-label="Color selection">
+        <button type="button" class="btn" style="background-color: var(--color-picker-1);" data-color-picker="#A8DADC" data-color-input="color-input">
+            <span class="visually-hidden">色1</span>
+        </button>
+        <button type="button" class="btn" style="background-color: var(--color-picker-2);" data-color-picker="#F1FAEE" data-color-input="color-input">
+            <span class="visually-hidden">色2</span>
+        </button>
+        <button type="button" class="btn" style="background-color: var(--color-picker-3);" data-color-picker="#F8EDDF" data-color-input="color-input">
+            <span class="visually-hidden">色3</span>
+        </button>
+        <button type="button" class="btn" style="background-color: var(--color-picker-4);" data-color-picker="#FFE156" data-color-input="color-input">
+            <span class="visually-hidden">色4</span>
+        </button>
+        <button type="button" class="btn" style="background-color: var(--color-picker-5);" data-color-picker="#D8B4A0" data-color-input="color-input">
+            <span class="visually-hidden">色5</span>
+        </button>
+        <button type="button" class="btn" style="background-color: var(--color-picker-6);" data-color-picker="#B9FBC0" data-color-input="color-input">
+            <span class="visually-hidden">色6</span>
+        </button>
+    </div>
+    <input type="hidden" id="color-input" name="color" value="{{ current_color|default:'#ffffff' }}">
+</div>
+{% load static %}
+<script src="{% static 'js/color_picker.js' %}"></script>
+

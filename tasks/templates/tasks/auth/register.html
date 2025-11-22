@@ -1,0 +1,225 @@
+{% extends 'tasks/auth/auth_base.html' %}
+
+{% block title %}ユーザー登録{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h2 class="mb-4" style="color: #654321; text-align: center;">新規アカウント登録</h2>
+    
+    <form method="post" id="registerForm" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-floating">
+            <input type="text" class="form-control" id="username" name="username" placeholder="ユーザー名">
+            <label for="username">ユーザー名</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="email" name="email" id="email" class="form-control" 
+                   placeholder="メールアドレス" required autocomplete="off">
+            <label for="email">メールアドレス</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="password" name="password1" id="password1" class="form-control" 
+                   placeholder="パスワード" required autocomplete="off">
+            <label for="password1">パスワード</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="password" name="password2" id="password2" class="form-control" 
+                   placeholder="パスワード（確認）" required autocomplete="off">
+            <label for="password2">パスワード（確認）</label>
+        </div>
+
+        <button type="submit" class="auth-button">
+            <i class="fas fa-user-plus"></i> アカウント作成
+        </button>
+    </form>
+    
+    <div class="mt-4 text-center">
+        <p class="text-muted">
+            すでにアカウントをお持ちの方は
+        </p>
+        <a href="{% url 'login' %}" class="text-decoration-none" style="color: #654321;">
+            こちらからログイン
+        </a>
+    </div>
+</div>
+
+<style>
+    .input-group-with-validation {
+        position: relative;
+    }
+
+    .error-popup {
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 10px);
+        transform: translateY(-50%);
+        background-color: var(--sticky-yellow);
+        padding: 10px 15px;
+        border-radius: 4px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        white-space: nowrap;
+        animation: slideLeft 0.3s ease-out;
+    }
+
+    .error-content {
+        position: relative;
+    }
+
+    .error-message {
+        color: #654321;
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+    .error-message i {
+        margin-right: 8px;
+        color: #dc3545;
+    }
+
+    @keyframes slideLeft {
+        from {
+            transform: translate(20px, -50%);
+            opacity: 0;
+        }
+        to {
+            transform: translate(0, -50%);
+            opacity: 1;
+        }
+    }
+
+    /* ナイトモード対応 */
+    .night-mode .error-popup {
+        background-color: #2c2c2c;
+    }
+
+    .night-mode .error-message {
+        color: #ffd700;
+    }
+
+    .night-mode .error-message i {
+        color: #ff6b6b;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const inputs = {
+        username: document.getElementById('username'),
+        email: document.getElementById('email'),
+        password1: document.getElementById('password1'),
+        password2: document.getElementById('password2')
+    };
+
+    const errors = {
+        username: document.getElementById('usernameError'),
+        email: document.getElementById('emailError'),
+        password1: document.getElementById('password1Error'),
+        password2: document.getElementById('password2Error')
+    };
+
+    const errorTexts = {
+        username: document.getElementById('usernameErrorText'),
+        email: document.getElementById('emailErrorText'),
+        password1: document.getElementById('password1ErrorText'),
+        password2: document.getElementById('password2ErrorText')
+    };
+
+    function validateUsername(value) {
+        if (value.length < 3) {
+            return 'ユーザー名は3文字以上必要です';
+        }
+        return '';
+    }
+
+    function validateEmail(value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            return '有効なメールアドレスを入力してください';
+        }
+        return '';
+    }
+
+    function validatePassword(value) {
+        if (value.length < 8) {
+            return 'パスワードは8文字以上必要です';
+        }
+        return '';
+    }
+
+    function validatePasswordMatch(password1, password2) {
+        if (password1 !== password2) {
+            return 'パスワードが一致しません';
+        }
+        return '';
+    }
+
+    // 各入力フィールドのバリデーション
+    Object.keys(inputs).forEach(field => {
+        inputs[field].addEventListener('input', function() {
+            let errorMessage = '';
+            
+            switch(field) {
+                case 'username':
+                    errorMessage = validateUsername(this.value);
+                    break;
+                case 'email':
+                    errorMessage = validateEmail(this.value);
+                    break;
+                case 'password1':
+                    errorMessage = validatePassword(this.value);
+                    break;
+                case 'password2':
+                    errorMessage = validatePasswordMatch(inputs.password1.value, this.value);
+                    break;
+            }
+
+            if (errorMessage) {
+                errorTexts[field].textContent = errorMessage;
+                errors[field].style.display = 'block';
+            } else {
+                errors[field].style.display = 'none';
+            }
+        });
+    });
+
+    // フォーム送信時のバリデーション
+    form.addEventListener('submit', function(e) {
+        let hasError = false;
+        
+        Object.keys(inputs).forEach(field => {
+            let errorMessage = '';
+            
+            switch(field) {
+                case 'username':
+                    errorMessage = validateUsername(inputs[field].value);
+                    break;
+                case 'email':
+                    errorMessage = validateEmail(inputs[field].value);
+                    break;
+                case 'password1':
+                    errorMessage = validatePassword(inputs[field].value);
+                    break;
+                case 'password2':
+                    errorMessage = validatePasswordMatch(inputs.password1.value, inputs[field].value);
+                    break;
+            }
+
+            if (errorMessage) {
+                errorTexts[field].textContent = errorMessage;
+                errors[field].style.display = 'block';
+                hasError = true;
+            }
+        });
+
+        if (hasError) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %} 

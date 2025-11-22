@@ -1,0 +1,8 @@
+{% comment %}
+新規タスク作成ボタン共通パーツ
+使用方法: {% include 'tasks/includes/create_task_button.html' %}
+{% endcomment %}
+<a href="{% url 'add_task' %}" class="btn btn-create-task">
+    <i class="fas fa-plus"></i> 新規タスク作成
+</a>
+

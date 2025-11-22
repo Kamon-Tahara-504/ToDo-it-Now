@@ -1,0 +1,36 @@
+{% comment %}
+共有タスクカード共通パーツ（shared_tasks.html用）
+使用方法: 
+{% include 'tasks/includes/task_card_shared.html' with task=task %}
+{% endcomment %}
+<div class="task-card {{ task.color }} tape-design" style="background-color: {{ task.color }};">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="task-content">
+            <h5 style="color: var(--text-black); margin-bottom: 5px;">{{ task.title }}</h5>
+            <small style="color: var(--text-black);">達成期限: {{ task.deadline|date:"Y年n月j日 H:i" }}</small>
+        </div>
+        <div class="task-actions">
+            <button type="button" class="btn btn-outline-secondary rounded-circle task-action-btn share-button" 
+                    data-task-id="{{ task.id }}">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+    <div class="task-details" style="display: none;">
+        <p style="color: var(--text-black);"><strong>メモ:</strong> 
+            {% if task.description|length > 0 %}
+                {{ task.description }}
+            {% else %}
+                <span style="font-style: italic;">メモは入力されていません</span>
+            {% endif %}
+        </p>
+        <p style="color: var(--text-black);"><strong>作成者:</strong> {{ task.user.username }}</p>
+        <p style="color: var(--text-black);"><strong>作成日:</strong> {{ task.created_at|date:"Y年n月j日 H:i" }}</p>
+        <p style="color: var(--text-black);"><strong>共有相手:</strong> 
+            {% for user in task.shared_with.all %}
+                {{ user.username }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+    </div>
+</div>
+

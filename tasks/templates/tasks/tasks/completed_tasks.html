@@ -1,0 +1,26 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %}完了済みタスク{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4 d-flex justify-content-between align-items-center" id="taskSection">
+        <div class="d-flex align-items-center">
+            <span class="me-3">完了済みタスク</span>
+            {% include 'tasks/includes/sort_buttons.html' with current_sort=current_sort %}
+        </div>
+        {% include 'tasks/includes/create_task_button.html' %}
+    </h2>
+    {% if tasks %}
+        {% for task in tasks %}
+            {% include 'tasks/includes/task_card.html' with task=task show_share=False show_edit=False show_complete=False show_delete=True show_completed_at=True %}
+        {% endfor %}
+    {% else %}
+        <div class="empty-message">
+            <p>完了済みのタスクはありません。</p>
+        </div>
+    {% endif %}
+</div>
+
+{% include 'tasks/includes/modals/delete_modal.html' %}
+{% endblock %}

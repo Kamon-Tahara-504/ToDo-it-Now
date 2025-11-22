@@ -1,0 +1,16 @@
+{% comment %}
+並び替えボタン共通パーツ
+使用方法: {% include 'tasks/includes/sort_buttons.html' with current_sort=current_sort %}
+{% endcomment %}
+<div class="btn-group">
+    <a href="?sort=created_desc" class="btn {% if current_sort == 'created_desc' %}btn-primary{% else %}btn{% endif %}">
+        <i class="fas fa-sort-amount-down"></i> 新しい順
+    </a>
+    <a href="?sort=created_asc" class="btn {% if current_sort == 'created_asc' %}btn-primary{% else %}btn{% endif %}">
+        <i class="fas fa-sort-amount-up"></i> 古い順
+    </a>
+    <a href="?sort=deadline" class="btn {% if current_sort == 'deadline' %}btn-primary{% else %}btn{% endif %}">
+        <i class="fas fa-clock"></i> 期限順
+    </a>
+</div>
+
