@@ -1,0 +1,18 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %}タスク詳細{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ task.title }}</h2>
+            <p class="card-text">{{ task.description }}</p>
+            <p class="card-text"><small class="text-muted">期限: {{ task.deadline }}</small></p>
+            <a href="{% url back_url %}" class="btn btn-secondary">戻る</a>
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">編集</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

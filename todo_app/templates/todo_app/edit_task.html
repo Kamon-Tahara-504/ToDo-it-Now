@@ -1,7 +1,0 @@
-{% extends 'todo_app/base.html' %}
-
-{% block title %}タスク編集{% endblock %}
-
-{% block content %}
-{% include 'todo_app/includes/task_form.html' with title='タスク編集' submit_text='保存' current_color=task.color %}
-{% endblock %}
