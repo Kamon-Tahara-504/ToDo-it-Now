@@ -38,8 +38,7 @@ def add_task(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
-            task.created_at = timezone.now()  # 作成日時を明示的に設定
-            task.updated_at = timezone.now()  # 更新日時を明示的に設定
+            task.completed = False  # 明示的に未完了状態を設定
             task.save()
             messages.success(request, 'タスクが作成されました！')
             return redirect('task_list')
@@ -185,13 +184,12 @@ def edit_task(request, task_id):
     else:
         form = TaskForm(instance=task)
     
-    return render(request, 'todo_app/add_task.html', {
+    return render(request, 'todo_app/edit_task.html', {
         'form': form,
-        'edit_mode': True,
         'task': task
     })
 
-@login_required
+@login_required_with_cache
 def shared_tasks(request):
     # ログインユーザーが共有したタスクを取得
     tasks = Task.objects.filter(shared_with=request.user).distinct()
