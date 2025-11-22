@@ -71,6 +71,9 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% load static %}
+    <script src="{% static 'js/design_utils.js' %}"></script>
+    <script src="{% static 'js/task_interactions.js' %}"></script>
     <script>
         // ページ読み込み時にナイトモードの状態を確認
         document.addEventListener('DOMContentLoaded', () => {
@@ -79,5 +82,6 @@
             }
         });
     </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
