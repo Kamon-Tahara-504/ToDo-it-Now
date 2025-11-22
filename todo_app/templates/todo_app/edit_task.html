@@ -3,35 +3,5 @@
 {% block title %}タスク編集{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="task-card" style="background-color: #f5f5dc; border: 1px solid #ccc; border-radius: 8px; padding: 15px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); transform: none;">
-        <h2 class="mb-4" style="color: #654321;">タスク編集</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="id_title" style="color: #654321;">タイトル :</label> {{ form.title }}
-            </div>
-            <div class="mb-3">
-                <label for="id_description" style="color: #654321;">メモ :</label> {{ form.description }}
-            </div>
-            <div class="mb-3">
-                <label for="id_deadline" style="color: #654321;">達成期日 :</label> {{ form.deadline }}
-            </div>
-            <div class="mb-3">
-                <label for="color" style="color: #654321;">色を選択 :</label><br>
-                <div class="btn-group" role="group" aria-label="Color selection">
-                    <button type="button" class="btn" style="background-color: #A8DADC;" onclick="document.getElementById('color-input').value='#A8DADC'"></button>
-                    <button type="button" class="btn" style="background-color: #F1FAEE;" onclick="document.getElementById('color-input').value='#F1FAEE'"></button>
-                    <button type="button" class="btn" style="background-color: #F8EDDF;" onclick="document.getElementById('color-input').value='#F8EDDF'"></button>
-                    <button type="button" class="btn" style="background-color: #FFE156;" onclick="document.getElementById('color-input').value='#FFE156'"></button>
-                    <button type="button" class="btn" style="background-color: #D8B4A0;" onclick="document.getElementById('color-input').value='#D8B4A0'"></button>
-                    <button type="button" class="btn" style="background-color: #B9FBC0;" onclick="document.getElementById('color-input').value='#B9FBC0'"></button>
-                </div>
-                <input type="hidden" id="color-input" name="color" value="{{ task.color }}">
-            </div>
-            <button type="submit" class="btn btn-success">保存</button>
-            <a href="{% url 'task_list' %}" class="btn btn-secondary">キャンセル</a>
-        </form>
-    </div>
-</div>
-{% endblock %} 
+{% include 'todo_app/includes/task_form.html' with title='タスク編集' submit_text='保存' current_color=task.color %}
+{% endblock %}
