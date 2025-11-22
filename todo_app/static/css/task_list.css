@@ -1,0 +1,93 @@
+/* タスクリスト固有のスタイル */
+
+/* タスクカードの拡張スタイル */
+.task-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: 0;
+    padding: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-card:hover {
+    transform: scale(1.02) rotate(0deg) !important;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+    z-index: 3;
+}
+
+.task-details {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.task-content {
+    flex-grow: 1;
+}
+
+.task-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    z-index: 4;
+}
+
+/* タスクアクションボタンのホバー時にカード全体のホバーと競合しないように */
+.task-actions a,
+.task-actions button {
+    position: relative;
+    z-index: 4;
+}
+
+.task-actions a:hover,
+.task-actions button:hover {
+    transform: none;
+}
+
+/* 空の状態メッセージのスタイル */
+.empty-message {
+    background-color: var(--sticky-yellow);
+    padding: 15px 20px;
+    border-radius: 2px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    transform: rotate(-1deg);
+    width: fit-content;
+    margin: 20px auto;
+    position: relative;
+}
+
+.empty-message::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 12px;
+    background-color: rgba(222, 184, 135, 0.5);
+    border-radius: 2px;
+}
+
+.empty-message p {
+    color: var(--dark-brown);
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* ナイトモード対応 */
+.night-mode .empty-message {
+    background-color: var(--bg-dark);
+}
+
+.night-mode .empty-message::before {
+    background-color: rgba(255, 215, 0, 0.3);
+}
+
+.night-mode .empty-message p {
+    color: var(--night-gold);
+}
+
