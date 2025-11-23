@@ -58,10 +58,12 @@ body {
 }
 
 /* 罫線用のオーバーレイを右側のみに */
+/* .notebook-overlay は削除され、.main-content の背景として実装されました */
+/*
 .notebook-overlay {
     position: fixed;
     top: 0;
-    left: 282px; /* 250px (sidebar width) + 16px (left margin) + 16px (spacing) */
+    left: 282px;
     right: 0;
     bottom: 0;
     background-image: linear-gradient(var(--border-color) 1px, transparent 1px);
@@ -69,6 +71,7 @@ body {
     pointer-events: none;
     z-index: 1;
 }
+*/
 
 .task-card {
     background-color: var(--light-brown);
@@ -118,6 +121,13 @@ body {
     max-width: calc(100% - 314px);
     position: relative;
     z-index: 2;
+    /* 最小高さを設定して常に罫線を表示 */
+    min-height: calc(100vh - 32px);
+    /* ノート帳の罫線を背景として設定（スクロールに追従） */
+    background-image: linear-gradient(var(--border-color) 1px, transparent 1px);
+    background-size: 100% 2em;
+    background-attachment: local; /* スクロールに追従 */
+    background-position: 0 0;
 }
 
 .nav-link {
