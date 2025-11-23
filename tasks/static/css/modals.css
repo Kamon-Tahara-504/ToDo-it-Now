@@ -274,3 +274,81 @@
     box-shadow: 0 0 0 3px rgba(240, 173, 78, 0.2);
 }
 
+/* タスク編集モーダル用のスタイル */
+#editTaskModal .validation-content {
+    max-width: 500px;
+}
+
+#editTaskModal .validation-section {
+    margin-bottom: 0;
+}
+
+#editTaskModal .validation-section h6 {
+    color: var(--dark-brown);
+    margin-bottom: var(--spacing-4);
+    font-size: var(--typography-title-large-font-size);
+    font-weight: var(--typography-title-large-font-weight);
+}
+
+#editTaskModal #editTaskFormContainer form label {
+    color: var(--dark-brown);
+    display: block;
+    margin-bottom: var(--spacing-2);
+    font-size: var(--typography-body-medium-font-size);
+    font-weight: 500;
+}
+
+#editTaskModal #editTaskFormContainer form .mb-3 {
+    margin-bottom: var(--spacing-4);
+}
+
+#editTaskModal #editTaskFormContainer form input[type="text"],
+#editTaskModal #editTaskFormContainer form input[type="datetime-local"],
+#editTaskModal #editTaskFormContainer form textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: var(--typography-body-large-font-size);
+    transition: all var(--duration-short-4) var(--ease-standard);
+    min-height: var(--touch-target-min-size);
+}
+
+#editTaskModal #editTaskFormContainer form input[type="text"]:focus,
+#editTaskModal #editTaskFormContainer form input[type="datetime-local"]:focus,
+#editTaskModal #editTaskFormContainer form textarea:focus {
+    outline: none;
+    border-color: var(--dark-brown);
+    box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.1);
+}
+
+#editTaskModal #editTaskFormContainer form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#editTaskModal #editTaskFormContainer .modal-buttons {
+    margin-top: var(--spacing-5);
+}
+
+/* ナイトモード対応 */
+.night-mode #editTaskModal .validation-section h6,
+.night-mode #editTaskModal #editTaskFormContainer form label {
+    color: var(--night-gold);
+}
+
+.night-mode #editTaskModal #editTaskFormContainer form input[type="text"],
+.night-mode #editTaskModal #editTaskFormContainer form input[type="datetime-local"],
+.night-mode #editTaskModal #editTaskFormContainer form textarea {
+    background-color: var(--bg-dark);
+    color: var(--night-gold);
+    border-color: var(--night-gold);
+}
+
+.night-mode #editTaskModal #editTaskFormContainer form input[type="text"]:focus,
+.night-mode #editTaskModal #editTaskFormContainer form input[type="datetime-local"]:focus,
+.night-mode #editTaskModal #editTaskFormContainer form textarea:focus {
+    border-color: var(--night-gold);
+    box-shadow: 0 0 0 3px rgba(240, 173, 78, 0.2);
+}
+
