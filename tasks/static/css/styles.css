@@ -132,16 +132,23 @@
 
 .form-group {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-5);
   }
   
 .form-input {
     width: 100%;
-    padding: 10px;
+    padding: var(--spacing-3) var(--spacing-4);
     border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: var(--typography-body-large-font-size);
+    transition: all var(--duration-short-4) var(--ease-standard);
   }
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--dark-brown);
+    box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.1);
+}
   
   .form-label {
     position: absolute;
@@ -170,17 +177,24 @@
 
 .form-floating {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-4);
   width: 300px;
 }
 
 .form-floating input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: var(--spacing-3) var(--spacing-4);
   border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 30px;
-  font-size: 14px;
+  border-radius: 8px;
+  min-height: var(--touch-target-min-size);
+  font-size: var(--typography-body-large-font-size);
+  transition: all var(--duration-short-4) var(--ease-standard);
+}
+
+.form-floating input:focus {
+  outline: none;
+  border-color: var(--dark-brown);
+  box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.1);
 }
 
 .form-floating label {
@@ -208,10 +222,38 @@
   color: transparent;
 }
 
+/* カラーピッカーのスタイル */
+.btn-group[role="group"][aria-label="Color selection"] .btn {
+    min-width: var(--touch-target-min-size);
+    min-height: var(--touch-target-min-size);
+    width: var(--touch-target-min-size);
+    height: var(--touch-target-min-size);
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: all var(--duration-short-4) var(--ease-standard);
+    box-shadow: var(--elevation-2);
+    position: relative;
+}
+
+.btn-group[role="group"][aria-label="Color selection"] .btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--elevation-4);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-group[role="group"][aria-label="Color selection"] .btn:active {
+    transform: scale(0.95);
+}
+
+.btn-group[role="group"][aria-label="Color selection"] .btn:focus {
+    outline: none;
+    box-shadow: var(--elevation-4), 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
 /* 共有タスク用の追加スタイル */
 .shared-with {
-    margin-top: 10px;
-    font-size: 0.9em;
+    margin-top: var(--spacing-3);
+    font-size: var(--typography-body-small-font-size);
     color: var(--text-gray);
 }
 

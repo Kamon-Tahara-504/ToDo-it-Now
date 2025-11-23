@@ -6,16 +6,23 @@ body.night-mode {
 
 .night-mode .sidebar {
     background-color: #1e1e1e !important; /* サイドバーの背景色 */
-    border-right: 1px solid #f0ad4e !important; /* サイドバーの境界線を黄色に */
+    border: none !important; /* ボーダーを削除（角丸とエレベーションを使用） */
+    box-shadow: var(--elevation-4) !important; /* エレベーションを維持 */
 }
 
 .night-mode .nav-link {
     color: #ffffff !important; /* ナビゲーションリンクの色 */
 }
 
-.night-mode .nav-link:hover,
+.night-mode .nav-link:hover {
+    background-color: rgba(240, 173, 78, 0.1) !important; /* ホバー時の背景色 */
+    color: #f0ad4e !important;
+}
+
 .night-mode .nav-link.active {
-    background-color: #333 !important; /* ホバー時の背景色 */
+    background-color: #f0ad4e !important; /* アクティブ時の背景色 */
+    color: #1e1e1e !important;
+    box-shadow: var(--elevation-2) !important;
 }
 
 .night-mode .task-card {

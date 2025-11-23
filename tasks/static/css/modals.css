@@ -10,30 +10,71 @@
     justify-content: center;
     align-items: center;
     z-index: 1050;
+    animation: fadeIn var(--duration-medium-1) var(--ease-standard);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .validation-content {
     background-color: var(--modal-bg);
-    padding: 20px;
-    border-radius: 8px;
+    padding: var(--spacing-6);
+    border-radius: 12px;
     position: relative;
     width: 90%;
     max-width: 400px;
+    box-shadow: var(--elevation-24);
+    animation: modalSlideIn var(--duration-medium-1) var(--ease-decelerate);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 .close-validation {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: var(--spacing-3);
+    top: var(--spacing-3);
     background: none;
     border: none;
     font-size: 1.2em;
     cursor: pointer;
     color: var(--dark-brown);
+    width: var(--touch-target-min-size);
+    height: var(--touch-target-min-size);
+    min-width: var(--touch-target-min-size);
+    min-height: var(--touch-target-min-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--duration-short-4) var(--ease-standard);
+}
+
+.close-validation:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.close-validation:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.3);
 }
 
 .validation-section {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-5);
 }
 
 .validation-section h6 {
@@ -51,15 +92,20 @@
 
 .modal-buttons {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: var(--spacing-3);
+    margin-top: var(--spacing-5);
 }
 
 .btn-create, .btn-cancel {
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: var(--spacing-3) var(--spacing-6);
+    min-height: var(--touch-target-min-size);
+    border-radius: 24px;
     border: none;
     cursor: pointer;
+    font-weight: 500;
+    transition: all var(--duration-short-4) var(--ease-standard);
+    box-shadow: var(--elevation-2);
 }
 
 .btn-create {
@@ -73,7 +119,19 @@
 }
 
 .btn-create:hover, .btn-cancel:hover {
-    opacity: 0.8;
+    box-shadow: var(--elevation-4);
+    transform: translateY(-1px);
+    opacity: 1;
+}
+
+.btn-create:active, .btn-cancel:active {
+    box-shadow: var(--elevation-2);
+    transform: translateY(0);
+}
+
+.btn-create:focus, .btn-cancel:focus {
+    outline: none;
+    box-shadow: var(--elevation-4), 0 0 0 3px rgba(0, 123, 255, 0.3);
 }
 
 /* ナイトモード対応 */

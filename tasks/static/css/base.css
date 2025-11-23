@@ -73,15 +73,16 @@ body {
 .task-card {
     background-color: var(--light-brown);
     border: none;
-    border-radius: 0;
-    padding: 15px;
-    margin-bottom: 20px;
+    border-radius: 8px;
+    padding: var(--spacing-5);
+    margin-bottom: var(--spacing-5);
     width: 100%;
     position: relative;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--elevation-2);
     z-index: 2;
     transform: rotate(-1deg);
     color: var(--text-black);
+    transition: all var(--duration-medium-1) var(--ease-standard);
 }
 
 .task-card:nth-child(5n+1) {
@@ -106,8 +107,8 @@ body {
 }
 
 .task-card:hover {
-    transform: scale(1.02) rotate(0deg);
-    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+    transform: scale(1.01) rotate(0deg);
+    box-shadow: var(--elevation-8);
     z-index: 3;
 }
 
@@ -199,13 +200,18 @@ h2, h3 {
 
 /* タスクのタイトルスタイル */
 .task-card h5 {
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-2);
     color: var(--dark-brown);
+    font-size: var(--typography-title-large-font-size);
+    font-weight: var(--typography-title-large-font-weight);
+    line-height: var(--typography-title-large-line-height);
 }
 
 /* 締切日のスタイル */
 .task-card small {
     color: var(--dark-brown);
+    font-size: var(--typography-body-medium-font-size);
+    line-height: var(--typography-body-medium-line-height);
 }
 
 /* 追加: 設定メニューのスタイル */
