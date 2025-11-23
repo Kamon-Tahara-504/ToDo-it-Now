@@ -167,8 +167,10 @@ h2, h3 {
 }
 
 /* サイドバーのタイトルも太文字に */
-.sidebar h3 {
+.sidebar h3,
+.sidebar-title {
     font-weight: 700;
+    font-size: 32px;
 }
 
 /* メインコンテンツの見出しも太文字に */
