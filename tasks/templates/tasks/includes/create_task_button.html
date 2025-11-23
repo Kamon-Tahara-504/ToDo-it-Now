@@ -2,7 +2,7 @@
 新規タスク作成ボタン共通パーツ
 使用方法: {% include 'tasks/includes/create_task_button.html' %}
 {% endcomment %}
-<a href="{% url 'add_task' %}" class="btn btn-create-task">
+<button type="button" class="btn btn-create-task" id="openCreateTaskModal" data-modal="createTaskModal">
     <i class="fas fa-plus"></i> 新規タスク作成
-</a>
+</button>
 
