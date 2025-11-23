@@ -44,19 +44,24 @@ body {
 /* サイドバー */
 .sidebar {
     position: fixed;
-    height: 100vh;
-    border-right: 1px solid var(--border-color);
-    padding: 20px;
+    top: var(--spacing-4);
+    left: var(--spacing-4);
+    height: calc(100vh - 32px);
+    border: none;
+    border-radius: 12px;
+    padding: var(--spacing-5);
     width: 250px;
     background-color: var(--light-brown);
+    box-shadow: var(--elevation-4);
     z-index: 2;
+    transition: box-shadow var(--duration-medium-1) var(--ease-standard);
 }
 
 /* 罫線用のオーバーレイを右側のみに */
 .notebook-overlay {
     position: fixed;
     top: 0;
-    left: 250px;
+    left: 282px; /* 250px (sidebar width) + 16px (left margin) + 16px (spacing) */
     right: 0;
     bottom: 0;
     background-image: linear-gradient(var(--border-color) 1px, transparent 1px);
@@ -107,24 +112,39 @@ body {
 }
 
 .main-content {
-    margin-left: 270px;
-    padding: 20px;
-    max-width: calc(100% - 290px);
+    margin-left: 298px; /* 250px (sidebar width) + 16px (left margin) + 16px (spacing) + 16px (content margin) */
+    padding: var(--spacing-5);
+    max-width: calc(100% - 314px);
     position: relative;
     z-index: 2;
 }
 
 .nav-link {
     border-radius: 25px;
-    padding: 10px 20px;
-    margin: 5px 0;
+    padding: var(--spacing-3) var(--spacing-5);
+    margin: var(--spacing-1) 0;
+    min-height: var(--touch-target-min-size);
+    display: flex;
+    align-items: center;
+    color: var(--dark-brown);
+    transition: all var(--duration-short-4) var(--ease-standard);
+    position: relative;
+}
+
+.nav-link:hover {
+    background-color: rgba(101, 67, 33, 0.08);
     color: var(--dark-brown);
 }
 
-.nav-link:hover,
 .nav-link.active {
     background-color: var(--dark-brown);
     color: var(--bg-light);
+    box-shadow: var(--elevation-2);
+}
+
+.nav-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.2);
 }
 
 .container {

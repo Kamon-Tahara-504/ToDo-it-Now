@@ -1,39 +1,118 @@
 /* タスクアクションボタン */
 .task-action-btn {
-    width: 40px;
-    height: 40px;
+    width: var(--touch-target-min-size);
+    height: var(--touch-target-min-size);
+    min-width: var(--touch-target-min-size);
+    min-height: var(--touch-target-min-size);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
+    margin-right: var(--spacing-2);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--duration-short-4) var(--ease-standard);
+    border-radius: 50%;
 }
 
 .task-action-btn:last-child {
     margin-right: 0;
 }
 
+/* アイコンサイズ調整 */
+.task-action-btn i {
+    font-size: 1.25rem; /* 20px */
+    transition: transform var(--duration-short-4) var(--ease-standard);
+}
+
+/* Rippleエフェクト風のホバーアニメーション */
+.task-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width var(--duration-short-4) var(--ease-standard),
+                height var(--duration-short-4) var(--ease-standard);
+}
+
+.task-action-btn:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+.task-action-btn:active::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* フォーカスリング */
+.task-action-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.task-action-btn:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+
+/* ホバー時のアイコン拡大 */
+.task-action-btn:hover i {
+    transform: scale(1.1);
+}
+
 /* 新規タスク作成ボタン */
 .btn-create-task {
     background-color: var(--dark-brown);
     color: white;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--elevation-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    min-height: var(--touch-target-min-size);
+    border-radius: 24px;
+    transition: all var(--duration-short-4) var(--ease-standard);
+    font-weight: 500;
+}
+
+.btn-create-task:hover {
+    box-shadow: var(--elevation-4);
+    transform: translateY(-1px);
+    background-color: var(--dark-brown);
+    color: white;
+}
+
+.btn-create-task:active {
+    box-shadow: var(--elevation-2);
+    transform: translateY(0);
+}
+
+.btn-create-task:focus {
+    outline: none;
+    box-shadow: var(--elevation-4), 0 0 0 3px rgba(101, 67, 33, 0.3);
 }
 
 /* 並び替えボタンのスタイル */
 .btn-group {
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--elevation-2);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .btn-group .btn {
     background-color: var(--light-brown);
     border-color: var(--dark-brown);
     color: var(--dark-brown);
+    min-height: var(--touch-target-min-size);
+    padding: var(--spacing-2) var(--spacing-4);
+    transition: all var(--duration-short-4) var(--ease-standard);
 }
 
 .btn-group .btn.btn-primary {
     background-color: var(--dark-brown);
     border-color: var(--dark-brown);
     color: var(--light-brown);
+    box-shadow: var(--elevation-2);
 }
 
 .btn-group .btn:hover {
@@ -41,6 +120,13 @@
     border-color: var(--dark-brown);
     color: var(--light-brown);
     opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-group .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(101, 67, 33, 0.2);
+    z-index: 1;
 }
 
 /* ナイトモード対応 */
@@ -64,28 +150,68 @@
 }
 
 /* ボタンのホバースタイル */
+.btn-outline-success {
+    transition: all var(--duration-short-4) var(--ease-standard);
+}
+
 .btn-outline-success:hover {
     background-color: var(--btn-success) !important;
     color: white !important;
     border-color: var(--btn-success) !important;
+    box-shadow: var(--elevation-2);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    transition: all var(--duration-short-4) var(--ease-standard);
 }
 
 .btn-outline-primary:hover {
     background-color: var(--btn-primary) !important;
     color: white !important;
     border-color: var(--btn-primary) !important;
+    box-shadow: var(--elevation-2);
+    transform: translateY(-1px);
+}
+
+.btn-outline-danger {
+    transition: all var(--duration-short-4) var(--ease-standard);
 }
 
 .btn-outline-danger:hover {
     background-color: var(--btn-danger) !important;
     color: white !important;
     border-color: var(--btn-danger) !important;
+    box-shadow: var(--elevation-2);
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    transition: all var(--duration-short-4) var(--ease-standard);
 }
 
 .btn-outline-secondary:hover {
     background-color: #6c757d !important;
     color: white !important;
     border-color: #6c757d !important;
+    box-shadow: var(--elevation-2);
+    transform: translateY(-1px);
+}
+
+/* フォーカスリング */
+.btn-outline-success:focus,
+.btn-outline-primary:focus,
+.btn-outline-danger:focus,
+.btn-outline-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.btn-outline-success:focus:not(:focus-visible),
+.btn-outline-primary:focus:not(:focus-visible),
+.btn-outline-danger:focus:not(:focus-visible),
+.btn-outline-secondary:focus:not(:focus-visible) {
+    box-shadow: none;
 }
 
 /* 共有ボタンのアクティブスタイル */
@@ -93,10 +219,13 @@
     background-color: #6c757d !important;
     color: white !important;
     border-color: #6c757d !important;
+    box-shadow: var(--elevation-2);
 }
 
 .shared-active:hover {
     background-color: #5a6268 !important;
     border-color: #5a6268 !important;
+    box-shadow: var(--elevation-4);
+    transform: translateY(-1px);
 }
 
