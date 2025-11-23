@@ -259,6 +259,53 @@ function initCreateTaskModal() {
             }
         }
     });
+
+    // フォーム送信処理
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // 既存のバリデーション処理を実行
+            const deadlineInput = form.querySelector('input[name="deadline"]');
+            const warningModal = document.getElementById('warningModal');
+            
+            if (deadlineInput && deadlineInput.value && warningModal) {
+                const deadlineValue = new Date(deadlineInput.value);
+                const now = new Date();
+                
+                // 締切が現在時刻より前の場合、警告モーダルを表示
+                if (deadlineValue < now) {
+                    e.preventDefault();
+                    warningModal.style.display = 'flex';
+                    
+                    // 警告モーダルの「作成する」ボタンでフォームを送信
+                    const createButton = document.getElementById('createButton');
+                    if (createButton) {
+                        // 既存のイベントリスナーを削除するため、一度削除して再追加
+                        const newCreateButton = createButton.cloneNode(true);
+                        createButton.parentNode.replaceChild(newCreateButton, createButton);
+                        newCreateButton.addEventListener('click', function() {
+                            warningModal.style.display = 'none';
+                            // preventDefaultを解除して通常の送信を実行
+                            form.submit();
+                        });
+                    }
+                    
+                    // 警告モーダルの「作成しない」ボタンでモーダルを閉じる
+                    const cancelButton = document.getElementById('cancelButton');
+                    if (cancelButton) {
+                        const newCancelButton = cancelButton.cloneNode(true);
+                        cancelButton.parentNode.replaceChild(newCancelButton, cancelButton);
+                        newCancelButton.addEventListener('click', function() {
+                            warningModal.style.display = 'none';
+                        });
+                    }
+                    return;
+                }
+            }
+            
+            // バリデーションが通った場合、通常のPOST送信を実行
+            // 既存のadd_taskビューが処理し、成功時はリダイレクトでページがリロードされる
+        });
+    }
 }
 
 /**
