@@ -27,9 +27,13 @@ def task_list(request: HttpRequest) -> HttpResponse:
     tasks = get_active_tasks(request.user)
     tasks = get_sorted_tasks(tasks, sort_by)
     
+    # モーダル用のフォームを準備
+    form = TaskForm()
+    
     context = {
         'tasks': tasks,
-        'current_sort': sort_by
+        'current_sort': sort_by,
+        'form': form
     }
     return render(request, 'tasks/tasks/task_list.html', context)
 
@@ -55,9 +59,13 @@ def completed_tasks(request: HttpRequest) -> HttpResponse:
     tasks = get_completed_tasks(request.user)
     tasks = get_sorted_tasks(tasks, sort_by)
     
+    # モーダル用のフォームを準備
+    form = TaskForm()
+    
     context = {
         'tasks': tasks,
-        'current_sort': sort_by
+        'current_sort': sort_by,
+        'form': form
     }
     return render(request, 'tasks/tasks/completed_tasks.html', context)
 
@@ -68,9 +76,13 @@ def overdue_tasks_view(request: HttpRequest) -> HttpResponse:
     overdue_tasks = get_overdue_tasks(request.user)
     overdue_tasks = get_sorted_tasks(overdue_tasks, sort_by)
     
+    # モーダル用のフォームを準備
+    form = TaskForm()
+    
     context = {
         'overdue_tasks': overdue_tasks,
-        'current_sort': sort_by
+        'current_sort': sort_by,
+        'form': form
     }
     return render(request, 'tasks/tasks/overdue_tasks.html', context)
 
@@ -133,8 +145,12 @@ def shared_tasks(request: HttpRequest) -> HttpResponse:
     # 期限が設定されているタスクのみを取得
     tasks_with_deadline = tasks.exclude(deadline__isnull=True)
     
+    # モーダル用のフォームを準備
+    form = TaskForm()
+    
     return render(request, 'tasks/tasks/shared_tasks.html', {
-        'tasks': tasks_with_deadline
+        'tasks': tasks_with_deadline,
+        'form': form
     })
 
 @login_required_with_cache
