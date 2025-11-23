@@ -195,6 +195,73 @@ function initModalCloseButtons() {
 }
 
 /**
+ * タスク作成モーダルの処理を初期化
+ */
+function initCreateTaskModal() {
+    const createTaskModal = document.getElementById('createTaskModal');
+    if (!createTaskModal) return;
+
+    const openButton = document.getElementById('openCreateTaskModal');
+    const cancelButton = document.getElementById('cancelCreateTask');
+    const closeButton = createTaskModal.querySelector('.close-validation');
+    const form = document.getElementById('createTaskForm');
+
+    // モーダルを開く
+    if (openButton) {
+        openButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            createTaskModal.style.display = 'flex';
+            // フォームをリセット
+            if (form) {
+                form.reset();
+                // 色選択をリセット
+                const colorInput = document.getElementById('color-input');
+                if (colorInput) {
+                    colorInput.value = '#ffffff';
+                }
+                // カラーピッカーの選択状態をリセット
+                document.querySelectorAll('[data-color-picker]').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+            }
+        });
+    }
+
+    // キャンセルボタンでモーダルを閉じる
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            createTaskModal.style.display = 'none';
+            // フォームをリセット
+            if (form) {
+                form.reset();
+            }
+        });
+    }
+
+    // 閉じるボタンでモーダルを閉じる
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            createTaskModal.style.display = 'none';
+            // フォームをリセット
+            if (form) {
+                form.reset();
+            }
+        });
+    }
+
+    // モーダル外クリックで閉じる
+    createTaskModal.addEventListener('click', function(e) {
+        if (e.target === createTaskModal) {
+            createTaskModal.style.display = 'none';
+            // フォームをリセット
+            if (form) {
+                form.reset();
+            }
+        }
+    });
+}
+
+/**
  * 全てのタスクインタラクションを初期化
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -202,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCompleteModal();
     initDeleteModal();
     initShareModal();
+    initCreateTaskModal();
     initModalCloseButtons();
 });
 
