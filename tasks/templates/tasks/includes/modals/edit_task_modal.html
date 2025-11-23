@@ -1,0 +1,20 @@
+{% comment %}
+タスク編集モーダル共通パーツ
+使用方法: {% include 'tasks/includes/modals/edit_task_modal.html' %}
+{% endcomment %}
+{% load static %}
+<div class="validation-modal" id="editTaskModal">
+    <div class="validation-content">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>タスク編集</h6>
+            <div id="editTaskFormContainer">
+                <!-- フォームはAJAXで動的に読み込まれる -->
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'tasks/includes/modals/warning_modal.html' %}
+
