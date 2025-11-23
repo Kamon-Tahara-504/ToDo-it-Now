@@ -309,6 +309,140 @@ function initCreateTaskModal() {
 }
 
 /**
+ * タスク編集モーダルの処理を初期化
+ */
+function initEditTaskModal() {
+    const editTaskModal = document.getElementById('editTaskModal');
+    if (!editTaskModal) return;
+
+    const formContainer = document.getElementById('editTaskFormContainer');
+    const closeButton = editTaskModal.querySelector('.close-validation');
+    let currentTaskId = null;
+
+    // 編集ボタンクリックイベント
+    document.querySelectorAll('[data-action="edit"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const taskId = this.getAttribute('data-task-id');
+            if (!taskId) return;
+
+            currentTaskId = taskId;
+            
+            // ローディング表示
+            if (formContainer) {
+                formContainer.innerHTML = '<p>読み込み中...</p>';
+            }
+            
+            // AJAXでフォームを取得
+            fetch(`/task/${taskId}/edit/`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.text())
+            .then(html => {
+                // HTMLからフォーム部分を抽出
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const formElement = doc.querySelector('#taskForm');
+                
+                if (formElement && formContainer) {
+                    // フォームをモーダル用に調整
+                    const form = formElement.cloneNode(true);
+                    form.id = 'editTaskForm';
+                    
+                    // キャンセルボタンをモーダル用に変更
+                    const cancelLink = form.querySelector('a[href*="task_list"]');
+                    if (cancelLink) {
+                        const cancelButton = document.createElement('button');
+                        cancelButton.type = 'button';
+                        cancelButton.className = 'btn btn-cancel';
+                        cancelButton.id = 'cancelEditTask';
+                        cancelButton.innerHTML = '<i class="fas fa-times"></i> キャンセル';
+                        cancelLink.parentNode.replaceChild(cancelButton, cancelLink);
+                    }
+                    
+                    // 送信ボタンをモーダル用に調整
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.className = 'btn btn-create';
+                        submitButton.innerHTML = '<i class="fas fa-check"></i> 保存';
+                    }
+                    
+                    // フォームをコンテナに挿入
+                    formContainer.innerHTML = '';
+                    formContainer.appendChild(form);
+                    
+                    // ボタンをモーダルボタンエリアに移動
+                    const buttons = form.querySelectorAll('.btn');
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.className = 'modal-buttons';
+                    buttons.forEach(btn => {
+                        if (btn.type === 'submit' || btn.id === 'cancelEditTask') {
+                            buttonsContainer.appendChild(btn);
+                        }
+                    });
+                    form.appendChild(buttonsContainer);
+                    
+                    // カラーピッカーの初期化
+                    if (typeof initColorPicker === 'function') {
+                        initColorPicker();
+                    }
+                    
+                    // モーダルを開く
+                    editTaskModal.style.display = 'flex';
+                } else {
+                    console.error('フォームが見つかりませんでした');
+                    if (formContainer) {
+                        formContainer.innerHTML = '<p>エラー: フォームの読み込みに失敗しました</p>';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('エラー:', error);
+                if (formContainer) {
+                    formContainer.innerHTML = '<p>エラー: フォームの読み込みに失敗しました</p>';
+                }
+            });
+        });
+    });
+
+    // キャンセルボタンでモーダルを閉じる（動的に追加されるボタン用）
+    editTaskModal.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'cancelEditTask') {
+            editTaskModal.style.display = 'none';
+            if (formContainer) {
+                formContainer.innerHTML = '';
+            }
+        }
+    });
+
+    // 閉じるボタンでモーダルを閉じる
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            editTaskModal.style.display = 'none';
+            if (formContainer) {
+                formContainer.innerHTML = '';
+            }
+        });
+    }
+
+    // モーダル外クリックで閉じる
+    editTaskModal.addEventListener('click', function(e) {
+        if (e.target === editTaskModal) {
+            editTaskModal.style.display = 'none';
+            if (formContainer) {
+                formContainer.innerHTML = '';
+            }
+        }
+    });
+}
+
+/**
  * 全てのタスクインタラクションを初期化
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -317,6 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initDeleteModal();
     initShareModal();
     initCreateTaskModal();
+    initEditTaskModal();
     initModalCloseButtons();
 });
 

@@ -5,25 +5,25 @@
 {% endcomment %}
 <div class="task-actions">
     {% if show_share %}
-        <form action="{% url 'share_task' task.id %}" method="POST" style="display: inline;">
+        <form action="{% url 'share_task' task.id %}" method="POST" class="task-action-form">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline-secondary rounded-circle task-action-btn {% if task.shared_with.exists %}shared-active{% endif %}">
+            <button type="submit" class="btn btn-outline-secondary rounded-circle task-action-btn {% if task.shared_with.exists %}shared-active{% endif %}" aria-label="共有">
                 <i class="fas fa-share-alt"></i>
             </button>
         </form>
     {% endif %}
     {% if show_edit %}
-        <a href="{% url 'edit_task' task.id %}" class="btn btn-outline-primary rounded-circle task-action-btn">
+        <button type="button" class="btn btn-outline-primary rounded-circle task-action-btn" data-task-id="{{ task.id }}" data-action="edit" id="editTaskBtn-{{ task.id }}" aria-label="編集">
             <i class="fas fa-edit"></i>
-        </a>
+        </button>
     {% endif %}
     {% if show_complete %}
-        <a href="{% url 'mark_task_as_completed' task.id %}" class="btn btn-outline-success rounded-circle task-action-btn">
+        <a href="{% url 'mark_task_as_completed' task.id %}" class="btn btn-outline-success rounded-circle task-action-btn" aria-label="完了">
             <i class="fas fa-check"></i>
         </a>
     {% endif %}
     {% if show_delete %}
-        <a href="{% url 'delete_task' task.id %}" class="btn btn-outline-danger rounded-circle task-action-btn">
+        <a href="{% url 'delete_task' task.id %}" class="btn btn-outline-danger rounded-circle task-action-btn" aria-label="削除">
             <i class="fas fa-trash"></i>
         </a>
     {% endif %}
