@@ -18,6 +18,11 @@
     margin-right: 0;
 }
 
+/* タスクアクションフォーム */
+.task-action-form {
+    display: inline;
+}
+
 /* アイコンサイズ調整 */
 .task-action-btn i {
     font-size: 1.25rem; /* 20px */
