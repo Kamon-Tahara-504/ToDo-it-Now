@@ -3,29 +3,29 @@
 使用方法: {% include 'tasks/includes/modals/create_task_modal.html' with form=form %}
 {% endcomment %}
 {% load static %}
-<div class="validation-modal" id="createTaskModal" style="display: none;">
-    <div class="validation-content" style="max-width: 500px;">
+<div class="validation-modal" id="createTaskModal">
+    <div class="validation-content">
         <button type="button" class="close-validation" aria-label="Close">
             <i class="fas fa-times"></i>
         </button>
         <div class="validation-section">
-            <h6 style="color: var(--dark-brown); margin-bottom: var(--spacing-4);">新規タスク作成</h6>
+            <h6>新規タスク作成</h6>
             <form method="post" action="{% url 'add_task' %}" id="createTaskForm">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="id_title" style="color: var(--dark-brown); display: block; margin-bottom: var(--spacing-2);">タイトル :</label>
+                    <label for="id_title">タイトル :</label>
                     {{ form.title }}
                 </div>
                 <div class="mb-3">
-                    <label for="id_description" style="color: var(--dark-brown); display: block; margin-bottom: var(--spacing-2);">メモ :</label>
+                    <label for="id_description">メモ :</label>
                     {{ form.description }}
                 </div>
                 <div class="mb-3">
-                    <label for="id_deadline" style="color: var(--dark-brown); display: block; margin-bottom: var(--spacing-2);">達成期日 :</label>
+                    <label for="id_deadline">達成期日 :</label>
                     {{ form.deadline }}
                 </div>
                 {% include 'tasks/includes/color_picker.html' with current_color='#ffffff' %}
-                <div class="modal-buttons" style="margin-top: var(--spacing-5);">
+                <div class="modal-buttons">
                     <button type="submit" class="btn btn-create" id="submitCreateTask">
                         <i class="fas fa-check"></i> タスクを追加
                     </button>
