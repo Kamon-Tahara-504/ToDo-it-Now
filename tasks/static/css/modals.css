@@ -81,6 +81,7 @@
     color: var(--dark-brown);
     margin-bottom: 10px;
     font-size: 1.2em;
+    font-weight: 700;
 }
 
 .validation-item {
@@ -209,7 +210,7 @@
     color: var(--dark-brown);
     margin-bottom: var(--spacing-4);
     font-size: var(--typography-title-large-font-size);
-    font-weight: var(--typography-title-large-font-weight);
+    font-weight: 700;
 }
 
 #createTaskModal form label {
@@ -217,7 +218,7 @@
     display: block;
     margin-bottom: var(--spacing-2);
     font-size: var(--typography-body-medium-font-size);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 #createTaskModal form .mb-3 {
@@ -251,6 +252,10 @@
 
 #createTaskModal .modal-buttons {
     margin-top: var(--spacing-5);
+}
+
+#createTaskModal label[for="color"] {
+    font-weight: 700;
 }
 
 /* ナイトモード対応 */
@@ -287,7 +292,7 @@
     color: var(--dark-brown);
     margin-bottom: var(--spacing-4);
     font-size: var(--typography-title-large-font-size);
-    font-weight: var(--typography-title-large-font-weight);
+    font-weight: 700;
 }
 
 #editTaskModal #editTaskFormContainer form label {
@@ -295,7 +300,7 @@
     display: block;
     margin-bottom: var(--spacing-2);
     font-size: var(--typography-body-medium-font-size);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 #editTaskModal #editTaskFormContainer form .mb-3 {
@@ -350,5 +355,9 @@
 .night-mode #editTaskModal #editTaskFormContainer form textarea:focus {
     border-color: var(--night-gold);
     box-shadow: 0 0 0 3px rgba(240, 173, 78, 0.2);
+}
+
+#editTaskModal #editTaskFormContainer label[for="color"] {
+    font-weight: 700;
 }
 
