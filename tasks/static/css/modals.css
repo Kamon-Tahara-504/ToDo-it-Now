@@ -81,6 +81,7 @@
     color: var(--dark-brown);
     margin-bottom: 10px;
     font-size: 1.2em;
+    font-weight: 700;
 }
 
 .validation-item {
@@ -209,7 +210,7 @@
     color: var(--dark-brown);
     margin-bottom: var(--spacing-4);
     font-size: var(--typography-title-large-font-size);
-    font-weight: var(--typography-title-large-font-weight);
+    font-weight: 700;
 }
 
 #createTaskModal form label {
@@ -217,7 +218,7 @@
     display: block;
     margin-bottom: var(--spacing-2);
     font-size: var(--typography-body-medium-font-size);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 #createTaskModal form .mb-3 {
@@ -251,6 +252,40 @@
 
 #createTaskModal .modal-buttons {
     margin-top: var(--spacing-5);
+}
+
+#createTaskModal label[for="color"] {
+    font-weight: 700;
+}
+
+/* モーダル内のカラーピッカーコンテナ */
+#createTaskModal .btn-group[role="group"][aria-label="Color selection"],
+#editTaskModal .btn-group[role="group"][aria-label="Color selection"] {
+    background-color: #ffffff; /* 白色背景 */
+    padding: var(--spacing-3) var(--spacing-4); /* 入力欄と同じパディング */
+    border: 1px solid #ddd; /* 入力欄と同じボーダー */
+    border-radius: 8px; /* 入力欄と同じ角丸 */
+    margin-top: var(--spacing-2);
+    display: flex;
+    gap: var(--spacing-3);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: var(--touch-target-min-size); /* 入力欄と同じ最小高さ */
+    box-shadow: none; /* 影を削除 */
+}
+
+/* モーダル内のカラーピッカーボタン */
+#createTaskModal .btn-group[role="group"][aria-label="Color selection"] .btn,
+#editTaskModal .btn-group[role="group"][aria-label="Color selection"] .btn {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: var(--touch-target-min-size);
+    height: var(--touch-target-min-size);
+    min-width: var(--touch-target-min-size);
+    min-height: var(--touch-target-min-size);
+    max-width: var(--touch-target-min-size);
+    max-height: var(--touch-target-min-size);
 }
 
 /* ナイトモード対応 */
@@ -287,7 +322,7 @@
     color: var(--dark-brown);
     margin-bottom: var(--spacing-4);
     font-size: var(--typography-title-large-font-size);
-    font-weight: var(--typography-title-large-font-weight);
+    font-weight: 700;
 }
 
 #editTaskModal #editTaskFormContainer form label {
@@ -295,7 +330,7 @@
     display: block;
     margin-bottom: var(--spacing-2);
     font-size: var(--typography-body-medium-font-size);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 #editTaskModal #editTaskFormContainer form .mb-3 {
@@ -350,5 +385,17 @@
 .night-mode #editTaskModal #editTaskFormContainer form textarea:focus {
     border-color: var(--night-gold);
     box-shadow: 0 0 0 3px rgba(240, 173, 78, 0.2);
+}
+
+#editTaskModal #editTaskFormContainer label[for="color"] {
+    font-weight: 700;
+}
+
+/* ナイトモード対応 - カラーピッカーコンテナ */
+.night-mode #createTaskModal .btn-group[role="group"][aria-label="Color selection"],
+.night-mode #editTaskModal .btn-group[role="group"][aria-label="Color selection"] {
+    background-color: var(--bg-dark); /* 入力欄と同じ背景色 */
+    border-color: var(--night-gold); /* 入力欄と同じボーダー色 */
+    box-shadow: none; /* 影を削除 */
 }
 

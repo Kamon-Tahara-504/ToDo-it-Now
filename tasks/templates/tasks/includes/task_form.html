@@ -9,13 +9,13 @@
         <form method="post" id="taskForm">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="id_title" style="color: var(--dark-brown);">タイトル :</label> {{ form.title }}
+                <label for="id_title" style="color: var(--dark-brown);">タイトル</label> {{ form.title }}
             </div>
             <div class="mb-3">
-                <label for="id_description" style="color: var(--dark-brown);">メモ :</label> {{ form.description }}
+                <label for="id_description" style="color: var(--dark-brown);">メモ</label> {{ form.description }}
             </div>
             <div class="mb-3">
-                <label for="id_deadline" style="color: var(--dark-brown);">達成期日 :</label> {{ form.deadline }}
+                <label for="id_deadline" style="color: var(--dark-brown);">達成期日</label> {{ form.deadline }}
             </div>
             {% include 'tasks/includes/color_picker.html' with current_color=current_color|default:'#ffffff' %}
             <button type="submit" class="btn btn-success" style="height: 38px;">{{ submit_text|default:'保存' }}</button>

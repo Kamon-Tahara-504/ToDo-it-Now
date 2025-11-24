@@ -13,15 +13,15 @@
             <form method="post" action="{% url 'add_task' %}" id="createTaskForm">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="id_title">タイトル :</label>
+                    <label for="id_title">タイトル</label>
                     {{ form.title }}
                 </div>
                 <div class="mb-3">
-                    <label for="id_description">メモ :</label>
+                    <label for="id_description">メモ</label>
                     {{ form.description }}
                 </div>
                 <div class="mb-3">
-                    <label for="id_deadline">達成期日 :</label>
+                    <label for="id_deadline">達成期日</label>
                     {{ form.deadline }}
                 </div>
                 {% include 'tasks/includes/color_picker.html' with current_color='#ffffff' %}
