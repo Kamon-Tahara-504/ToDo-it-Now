@@ -49,8 +49,8 @@ body {
     height: calc(100vh - 32px);
     border: none;
     border-radius: 12px;
-    padding: var(--spacing-5);
-    width: 250px;
+    padding: var(--spacing-6);
+    width: 300px;
     background-color: var(--light-brown);
     box-shadow: var(--elevation-4);
     z-index: 2;
@@ -116,9 +116,9 @@ body {
 }
 
 .main-content {
-    margin-left: 298px; /* 250px (sidebar width) + 16px (left margin) + 16px (spacing) + 16px (content margin) */
+    margin-left: 348px; /* 300px (sidebar width) + 16px (left margin) + 16px (spacing) + 16px (content margin) */
     padding: var(--spacing-5);
-    max-width: calc(100% - 314px);
+    max-width: calc(100% - 364px);
     position: relative;
     z-index: 2;
     /* 最小高さを設定して常に罫線を表示 */
@@ -132,14 +132,22 @@ body {
 
 .nav-link {
     border-radius: 25px;
-    padding: var(--spacing-3) var(--spacing-5);
-    margin: var(--spacing-1) 0;
-    min-height: var(--touch-target-min-size);
+    padding: var(--spacing-4) var(--spacing-6);
+    margin: var(--spacing-2) 0;
+    min-height: 56px;
     display: flex;
     align-items: center;
     color: var(--dark-brown);
+    font-size: 24px;
     transition: all var(--duration-short-4) var(--ease-standard);
     position: relative;
+}
+
+.nav-link i {
+    font-size: 24px;
+    margin-right: var(--spacing-3);
+    width: 24px;
+    text-align: center;
 }
 
 .nav-link:hover {
@@ -180,7 +188,8 @@ h2, h3 {
 .sidebar h3,
 .sidebar-title {
     font-weight: 700;
-    font-size: 32px;
+    font-size: 40px;
+    margin-bottom: var(--spacing-6);
 }
 
 /* メインコンテンツの見出しも太文字に */
@@ -224,6 +233,12 @@ h2, h3 {
     color: var(--dark-brown);
     font-size: var(--typography-body-medium-font-size);
     line-height: var(--typography-body-medium-line-height);
+}
+
+/* ログイン情報のスタイル */
+.sidebar .text-center.mt-4 {
+    font-size: 18px;
+    margin-top: var(--spacing-6);
 }
 
 /* 追加: 設定メニューのスタイル */
