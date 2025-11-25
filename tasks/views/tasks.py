@@ -39,6 +39,11 @@ def task_list(request: HttpRequest) -> HttpResponse:
 
 @login_required_with_cache
 def add_task(request: HttpRequest) -> HttpResponse:
+    # GETリクエスト（直接アクセス）の場合はタスク一覧にリダイレクト
+    if request.method == 'GET':
+        return redirect('task_list')
+    
+    # POSTリクエスト（モーダルからの送信）のみ処理
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -48,9 +53,9 @@ def add_task(request: HttpRequest) -> HttpResponse:
             task.save()
             messages.success(request, 'タスクが作成されました！')
             return redirect('task_list')
-    else:
-        form = TaskForm()
-    return render(request, 'tasks/tasks/add_task.html', {'form': form})
+    
+    # POSTリクエストでフォームが無効な場合もタスク一覧にリダイレクト
+    return redirect('task_list')
 
 @login_required_with_cache
 def completed_tasks(request: HttpRequest) -> HttpResponse:
