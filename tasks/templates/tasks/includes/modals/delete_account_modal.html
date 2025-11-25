@@ -1,0 +1,36 @@
+{% comment %}
+アカウント削除確認モーダル共通パーツ
+使用方法: {% include 'tasks/includes/modals/delete_account_modal.html' %}
+{% endcomment %}
+<div class="validation-modal" id="deleteAccountModal" style="display: none;">
+    <div class="validation-content warning-modal">
+        <button type="button" class="close-validation" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="validation-section">
+            <h6>警告</h6>
+            <div class="validation-item">
+                <p><strong>アカウントを削除しますか？</strong></p>
+                <p>この操作は取り消せません。以下のデータがすべて削除されます：</p>
+                <ul style="text-align: left; margin: 15px 0; padding-left: 20px;">
+                    <li>すべてのタスク</li>
+                    <li>共有設定</li>
+                    <li>アカウント情報</li>
+                </ul>
+                <p style="color: var(--btn-danger); font-weight: bold;">本当に削除してもよろしいですか？</p>
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <form action="{% url 'delete_account' %}" method="POST" id="deleteAccountForm" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" id="confirmDeleteAccount">
+                    <i class="fas fa-trash"></i> 削除する
+                </button>
+            </form>
+            <button type="button" class="btn btn-cancel" id="cancelDeleteAccount">
+                <i class="fas fa-times"></i> キャンセル
+            </button>
+        </div>
+    </div>
+</div>
+

@@ -88,6 +88,26 @@
     font-style: italic;
 }
 
+/* アカウントアクション */
+.account-info {
+    margin-bottom: var(--spacing-5);
+}
+
+.account-actions {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-3);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-4);
+}
+
+.account-actions .btn {
+    flex: 0 1 auto;
+    min-width: 150px;
+    max-width: 250px;
+    width: auto;
+}
+
 .settings-section {
     margin-top: 30px;
 }

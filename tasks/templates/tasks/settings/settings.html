@@ -8,9 +8,9 @@
     <div class="settings-sheet">
         <h2 class="settings-title">設定</h2>
         
-        <!-- アカウント情報表示 -->
+        <!-- アカウント -->
         <div class="settings-group">
-            <h3 class="settings-group-title">アカウント情報</h3>
+            <h3 class="settings-group-title">アカウント</h3>
             <div class="account-info">
                 <div class="account-info-item">
                     <span class="account-info-label">ユーザー名:</span>
@@ -43,14 +43,14 @@
                 </div>
                 {% endif %}
             </div>
-        </div>
-        
-        <!-- アカウント設定の項目 -->
-        <div class="settings-group">
-            <h3 class="settings-group-title">アカウント設定</h3>
-            <a href="{% url 'logout' %}" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt"></i> ログアウト
-            </a>
+            <div class="account-actions">
+                <a href="{% url 'logout' %}" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> ログアウト
+                </a>
+                <button type="button" class="btn btn-danger" id="openDeleteAccountModal">
+                    <i class="fas fa-trash"></i> アカウント削除
+                </button>
+            </div>
         </div>
 
         <!-- ナイトモード切り替えボタン -->
@@ -83,6 +83,9 @@
         </div>
     </div>
 </div>
+
+<!-- アカウント削除確認モーダル -->
+{% include 'tasks/includes/modals/delete_account_modal.html' %}
 {% endblock %}
 
 {% block extra_js %}
