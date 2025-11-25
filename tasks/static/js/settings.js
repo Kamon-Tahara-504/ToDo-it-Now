@@ -53,11 +53,53 @@ function initDesignRadios() {
 }
 
 /**
+ * アカウント削除モーダルの初期化
+ */
+function initDeleteAccountModal() {
+    const deleteAccountModal = document.getElementById('deleteAccountModal');
+    const openButton = document.getElementById('openDeleteAccountModal');
+    const cancelButton = document.getElementById('cancelDeleteAccount');
+    const closeButton = deleteAccountModal?.querySelector('.close-validation');
+    
+    if (!deleteAccountModal) return;
+    
+    // モーダルを開く
+    if (openButton) {
+        openButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            deleteAccountModal.style.display = 'flex';
+        });
+    }
+    
+    // キャンセルボタンでモーダルを閉じる
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            deleteAccountModal.style.display = 'none';
+        });
+    }
+    
+    // 閉じるボタンでモーダルを閉じる
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            deleteAccountModal.style.display = 'none';
+        });
+    }
+    
+    // モーダル外クリックで閉じる
+    deleteAccountModal.addEventListener('click', function(e) {
+        if (e.target === deleteAccountModal) {
+            deleteAccountModal.style.display = 'none';
+        }
+    });
+}
+
+/**
  * ページ読み込み時に設定画面の機能を初期化
  */
 document.addEventListener('DOMContentLoaded', function() {
     initNightModeToggle();
     initDesignRadios();
+    initDeleteAccountModal();
     
     // デザインを適用
     if (typeof applyDesign === 'function') {
