@@ -8,6 +8,43 @@
     <div class="settings-sheet">
         <h2 class="settings-title">設定</h2>
         
+        <!-- アカウント情報表示 -->
+        <div class="settings-group">
+            <h3 class="settings-group-title">アカウント情報</h3>
+            <div class="account-info">
+                <div class="account-info-item">
+                    <span class="account-info-label">ユーザー名:</span>
+                    <span class="account-info-value">{{ username }}</span>
+                </div>
+                {% if email %}
+                <div class="account-info-item">
+                    <span class="account-info-label">メールアドレス:</span>
+                    <span class="account-info-value">{{ email }}</span>
+                </div>
+                {% else %}
+                <div class="account-info-item">
+                    <span class="account-info-label">メールアドレス:</span>
+                    <span class="account-info-value account-info-empty">未設定</span>
+                </div>
+                {% endif %}
+                <div class="account-info-item">
+                    <span class="account-info-label">アカウント作成日:</span>
+                    <span class="account-info-value">{{ date_joined|date:"Y年n月j日 H:i" }}</span>
+                </div>
+                {% if last_login %}
+                <div class="account-info-item">
+                    <span class="account-info-label">最終ログイン日時:</span>
+                    <span class="account-info-value">{{ last_login|date:"Y年n月j日 H:i" }}</span>
+                </div>
+                {% else %}
+                <div class="account-info-item">
+                    <span class="account-info-label">最終ログイン日時:</span>
+                    <span class="account-info-value account-info-empty">ログイン履歴なし</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
         <!-- アカウント設定の項目 -->
         <div class="settings-group">
             <h3 class="settings-group-title">アカウント設定</h3>
