@@ -1,7 +1,7 @@
 /* CSS変数定義 */
 :root {
     --main-brown: #8B7355;
-    --light-brown: #F5F5DC;
+    --light-brown: #f5f0e8; /* 設定画面のフォーム色に統一（濃いベージュ） */
     --dark-brown: #654321;
     --sticky-yellow: #fff8dc;
     --sticky-pink: #ffe4e1;
@@ -34,7 +34,7 @@
     --text-black: #000000;
     --text-gray: #666;
     --border-color: #DEB887;
-    --modal-bg: #fff5e6;
+    --modal-bg: #f5f0e8; /* 設定画面のフォーム色に統一（濃いベージュ） */
 }
 
 body {
@@ -51,7 +51,7 @@ body {
     border-radius: 12px;
     padding: var(--spacing-6);
     width: 300px;
-    background-color: var(--light-brown);
+    background-color: var(--light-brown) !important; /* 設定画面のフォーム色に統一 */
     box-shadow: var(--elevation-4);
     z-index: 2;
     transition: box-shadow var(--duration-medium-1) var(--ease-standard);

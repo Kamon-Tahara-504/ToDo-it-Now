@@ -71,7 +71,7 @@ body.night-mode {
 /* 色選択のスタイルをナイトモードに影響させない */
 input[type="color"] {
     border: 1px solid #ccc; /* 通常のボーダー */
-    background-color: #fff; /* 通常の背景色 */
+    background-color: var(--light-brown); /* 設定画面のフォーム色に統一 */
 }
 
 
