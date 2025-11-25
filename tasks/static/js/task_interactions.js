@@ -357,38 +357,86 @@ function initEditTaskModal() {
                     // action属性を設定
                     form.action = `/task/${taskId}/edit/`;
                     
-                    // キャンセルボタンをモーダル用に変更
-                    const cancelLink = form.querySelector('a[href*="task_list"]');
-                    if (cancelLink) {
-                        const cancelButton = document.createElement('button');
-                        cancelButton.type = 'button';
-                        cancelButton.className = 'btn btn-cancel';
-                        cancelButton.id = 'cancelEditTask';
-                        cancelButton.innerHTML = '<i class="fas fa-times"></i> キャンセル';
-                        cancelLink.parentNode.replaceChild(cancelButton, cancelLink);
+                    // 元のフォーム内のボタンとリンクを確実に削除
+                    // 送信ボタンを削除
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    if (submitButton && submitButton.parentNode) {
+                        submitButton.parentNode.removeChild(submitButton);
                     }
                     
-                    // 送信ボタンをモーダル用に調整
-                    const submitButton = form.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        submitButton.className = 'btn btn-create';
-                        submitButton.innerHTML = '<i class="fas fa-check"></i> 保存';
+                    // キャンセルリンクを削除
+                    const cancelLink = form.querySelector('a[href*="task_list"]');
+                    if (cancelLink && cancelLink.parentNode) {
+                        cancelLink.parentNode.removeChild(cancelLink);
+                    }
+                    
+                    // btn-secondaryクラスの要素（灰色のキャンセルボタンなど）をすべて削除
+                    // カラーピッカーのボタンは除外
+                    const secondaryButtons = form.querySelectorAll('.btn-secondary');
+                    secondaryButtons.forEach(btn => {
+                        if (btn && btn.parentNode) {
+                            // カラーピッカーのボタンは除外
+                            if (!btn.closest('.btn-group[role="group"][aria-label="Color selection"]')) {
+                                btn.parentNode.removeChild(btn);
+                            }
+                        }
+                    });
+                    
+                    // btn-successクラスの要素（元の送信ボタンなど）をすべて削除
+                    // カラーピッカーのボタンは除外
+                    const successButtons = form.querySelectorAll('.btn-success');
+                    successButtons.forEach(btn => {
+                        if (btn && btn.parentNode) {
+                            // カラーピッカーのボタンは除外
+                            if (!btn.closest('.btn-group[role="group"][aria-label="Color selection"]')) {
+                                btn.parentNode.removeChild(btn);
+                            }
+                        }
+                    });
+                    
+                    // タスク作成モーダルと同じ構造でボタンを作成
+                    // 送信ボタンをモーダル用に作成（タスク作成モーダルと同じ構造）
+                    const newSubmitButton = document.createElement('button');
+                    newSubmitButton.type = 'submit';
+                    newSubmitButton.className = 'btn btn-create';
+                    newSubmitButton.id = 'submitEditTask';
+                    newSubmitButton.innerHTML = '<i class="fas fa-check"></i> 保存';
+                    
+                    // キャンセルボタンをモーダル用に作成（タスク作成モーダルと同じ構造）
+                    const cancelButton = document.createElement('button');
+                    cancelButton.type = 'button';
+                    cancelButton.className = 'btn btn-cancel';
+                    cancelButton.id = 'cancelEditTask';
+                    cancelButton.innerHTML = '<i class="fas fa-times"></i> キャンセル';
+                    
+                    // タスク作成モーダルと同じ構造でmodal-buttonsコンテナを作成
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.className = 'modal-buttons';
+                    
+                    // タスク作成モーダルと同じ順序でボタンを追加（送信→キャンセル）
+                    buttonsContainer.appendChild(newSubmitButton);
+                    buttonsContainer.appendChild(cancelButton);
+                    
+                    // カラーピッカーを取得
+                    const colorPicker = form.querySelector('.btn-group[role="group"][aria-label="Color selection"]');
+                    
+                    // カラーピッカーの後にmodal-buttonsコンテナを追加（タスク作成モーダルと同じ構造）
+                    if (colorPicker && colorPicker.parentNode) {
+                        // カラーピッカーの親要素（form）に、カラーピッカーの直後に追加
+                        if (colorPicker.nextSibling) {
+                            colorPicker.parentNode.insertBefore(buttonsContainer, colorPicker.nextSibling);
+                        } else {
+                            // nextSiblingがnullの場合は、appendChildで追加
+                            colorPicker.parentNode.appendChild(buttonsContainer);
+                        }
+                    } else {
+                        // カラーピッカーが見つからない場合は、フォームの最後に追加
+                        form.appendChild(buttonsContainer);
                     }
                     
                     // フォームをコンテナに挿入
                     formContainer.innerHTML = '';
                     formContainer.appendChild(form);
-                    
-                    // ボタンをモーダルボタンエリアに移動
-                    const buttons = form.querySelectorAll('.btn');
-                    const buttonsContainer = document.createElement('div');
-                    buttonsContainer.className = 'modal-buttons';
-                    buttons.forEach(btn => {
-                        if (btn.type === 'submit' || btn.id === 'cancelEditTask') {
-                            buttonsContainer.appendChild(btn);
-                        }
-                    });
-                    form.appendChild(buttonsContainer);
                     
                     // カラーピッカーの初期化
                     if (typeof initColorPicker === 'function') {
