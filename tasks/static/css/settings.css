@@ -2,7 +2,7 @@
 
 /* 設定シート（一つのカードにまとめる） */
 .settings-sheet {
-    background-color: var(--sticky-yellow);
+    background-color: var(--light-brown);
     border: none;
     border-radius: 8px;
     padding: var(--spacing-6);

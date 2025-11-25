@@ -235,6 +235,7 @@
     font-size: var(--typography-body-large-font-size);
     transition: all var(--duration-short-4) var(--ease-standard);
     min-height: var(--touch-target-min-size);
+    background-color: var(--light-brown); /* 設定画面のフォーム色に統一 */
 }
 
 #createTaskModal form input[type="text"]:focus,
@@ -261,7 +262,7 @@
 /* モーダル内のカラーピッカーコンテナ */
 #createTaskModal .btn-group[role="group"][aria-label="Color selection"],
 #editTaskModal .btn-group[role="group"][aria-label="Color selection"] {
-    background-color: #ffffff; /* 白色背景 */
+    background-color: var(--light-brown); /* 設定画面のフォーム色に統一 */
     padding: var(--spacing-3) var(--spacing-4); /* 入力欄と同じパディング */
     border: 1px solid #ddd; /* 入力欄と同じボーダー */
     border-radius: 8px; /* 入力欄と同じ角丸 */
@@ -347,6 +348,7 @@
     font-size: var(--typography-body-large-font-size);
     transition: all var(--duration-short-4) var(--ease-standard);
     min-height: var(--touch-target-min-size);
+    background-color: var(--light-brown); /* 設定画面のフォーム色に統一 */
 }
 
 #editTaskModal #editTaskFormContainer form input[type="text"]:focus,
