@@ -2,6 +2,7 @@ from django import forms
 from .models import Task
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 
 class BootstrapFormMixin:
@@ -50,3 +51,18 @@ class UserRegisterForm(BootstrapFormMixin, UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            # 大文字小文字を区別しない重複チェック
+            if User.objects.filter(email__iexact=email).exists():
+                raise ValidationError('このメールアドレスは既に使用されています。')
+        return email
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
