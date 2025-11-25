@@ -7,20 +7,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: var(--spacing-2);
     position: relative;
     overflow: hidden;
     transition: all var(--duration-short-4) var(--ease-standard);
     border-radius: 50%;
 }
 
-.task-action-btn:last-child {
-    margin-right: 0;
-}
-
 /* タスクアクションフォーム */
 .task-action-form {
-    display: inline;
+    display: contents;
 }
 
 /* アイコンサイズ調整 */
