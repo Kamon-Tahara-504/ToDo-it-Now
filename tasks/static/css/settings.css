@@ -1,11 +1,71 @@
 /* 設定画面固有のスタイル */
 
+/* 設定シート（一つのカードにまとめる） */
+.settings-sheet {
+    background-color: var(--sticky-yellow);
+    border: none;
+    border-radius: 8px;
+    padding: var(--spacing-6);
+    margin: var(--spacing-5) auto;
+    max-width: 800px;
+    box-shadow: var(--elevation-2);
+    position: relative;
+    transform: rotate(-0.5deg);
+    transition: all var(--duration-medium-1) var(--ease-standard);
+}
+
+.settings-sheet:hover {
+    transform: scale(1.01) rotate(0deg);
+    box-shadow: var(--elevation-8);
+    z-index: 3;
+}
+
+.settings-title {
+    color: var(--dark-brown);
+    font-size: var(--typography-title-large-font-size);
+    font-weight: 700;
+    margin-bottom: var(--spacing-6);
+    text-align: center;
+    border-bottom: 2px solid var(--dark-brown);
+    padding-bottom: var(--spacing-3);
+}
+
+.settings-group {
+    margin-bottom: var(--spacing-6);
+}
+
+.settings-group:last-child {
+    margin-bottom: 0;
+}
+
+.settings-group-title {
+    color: var(--dark-brown);
+    font-size: var(--typography-headline-font-size);
+    font-weight: 600;
+    margin-bottom: var(--spacing-4);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 1px solid rgba(101, 67, 33, 0.2);
+}
+
 .settings-section {
     margin-top: 30px;
 }
 
 .night-mode-toggle-btn {
     background-color: var(--sticky-yellow);
+    color: var(--dark-brown);
+    border: 2px solid var(--dark-brown);
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: 24px;
+    font-weight: 500;
+    transition: all var(--duration-short-4) var(--ease-standard);
+}
+
+.night-mode-toggle-btn:hover {
+    background-color: var(--dark-brown);
+    color: var(--sticky-yellow);
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-4);
 }
 
 .design-options {
@@ -48,6 +108,21 @@
 }
 
 /* ナイトモード対応 */
+.night-mode .settings-sheet {
+    background-color: var(--bg-dark);
+    color: var(--night-gold);
+}
+
+.night-mode .settings-title {
+    color: var(--night-gold);
+    border-bottom-color: var(--night-gold);
+}
+
+.night-mode .settings-group-title {
+    color: var(--night-gold);
+    border-bottom-color: rgba(240, 173, 78, 0.3);
+}
+
 .night-mode .design-preview {
     background-color: var(--bg-dark);
     color: white;
