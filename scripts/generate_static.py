@@ -27,6 +27,9 @@ django.setup()
 OUTPUT_DIR = BASE_DIR / 'docs'
 STATIC_DIR = OUTPUT_DIR / 'static'
 
+# GitHub PagesのベースURL（リポジトリ名）
+BASE_URL = '/ToDo-it-Now/'
+
 def ensure_dir(path):
     """ディレクトリが存在しない場合は作成"""
     path.mkdir(parents=True, exist_ok=True)
@@ -65,46 +68,43 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
     try:
         # 出力パスに基づいて現在のパスを決定
         if 'overdue' in str(output_path):
-            current_path = '/overdue/'
+            current_path = BASE_URL + 'overdue/'
         elif 'completed' in str(output_path):
-            current_path = '/completed/'
+            current_path = BASE_URL + 'completed/'
         else:
-            current_path = '/'
+            current_path = BASE_URL
         
-        # URL変数をコンテキストに追加
-        context['task_list_url'] = '/'
-        context['overdue_tasks_url'] = '/overdue/'
-        context['completed_tasks_url'] = '/completed/'
+        # URL変数をコンテキストに追加（BASE_URLを含む）
+        context['task_list_url'] = BASE_URL
+        context['overdue_tasks_url'] = BASE_URL + 'overdue/'
+        context['completed_tasks_url'] = BASE_URL + 'completed/'
         context['request'] = type('obj', (object,), {'path': current_path})()
+        context['BASE_URL'] = BASE_URL
         
         # render_to_stringを使用（RequestContextを自動的に処理）
         html = render_to_string(template_name, context)
         
-        # {% static 'path' %} を相対パスに変換
-        # 出力パスに基づいて相対パスを計算
-        depth = len(output_path.parent.relative_to(OUTPUT_DIR).parts) if output_path.parent != OUTPUT_DIR else 0
-        static_prefix = '../' * depth + 'static/' if depth > 0 else 'static/'
-        
-        # {% static '...' %} パターンを置換
+        # {% static 'path' %} を絶対パスに変換（BASE_URLを含む）
         def replace_static(match):
             path = match.group(1).strip('\'"')
-            return static_prefix + path
+            # BASE_URL + 'static/' + path の形式に変換
+            return BASE_URL.rstrip('/') + '/static/' + path.lstrip('/')
         
         html = re.sub(r'\{%\s*static\s+(["\'])(.*?)\1\s*%\}', replace_static, html)
         
-        # {% url 'name' %} パターンを相対パスに変換
+        # {% url 'name' %} パターンを絶対パスに変換（BASE_URLを含む）
         url_mapping = {
-            'task_list': '/',
-            'overdue_tasks': '/overdue/',
-            'completed_tasks': '/completed/',
-            'index': '/',
+            'task_list': BASE_URL,
+            'overdue_tasks': BASE_URL + 'overdue/',
+            'completed_tasks': BASE_URL + 'completed/',
+            'index': BASE_URL,
         }
         
         def replace_url(match):
             url_name = match.group(1).strip('\'"')
             if url_name in url_mapping:
                 return url_mapping[url_name]
-            return '/'
+            return BASE_URL
         
         html = re.sub(r'\{%\s*url\s+(["\'])(.*?)\1\s*%\}', replace_url, html)
         
@@ -290,16 +290,16 @@ def generate_static_site():
     # 404.html（GitHub Pages用）
     try:
         with open(OUTPUT_DIR / '404.html', 'w', encoding='utf-8') as f:
-            f.write('''<!DOCTYPE html>
+            f.write(f'''<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/">
+    <meta http-equiv="refresh" content="0; url={BASE_URL}">
     <title>404 - Page Not Found</title>
 </head>
 <body>
     <p>ページが見つかりません。トップページにリダイレクトします...</p>
-    <script>window.location.href = '/';</script>
+    <script>window.location.href = '{BASE_URL}';</script>
 </body>
 </html>''')
         print(f"404.htmlを生成しました")
