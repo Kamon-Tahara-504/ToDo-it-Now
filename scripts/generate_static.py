@@ -77,13 +77,8 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         context['completed_tasks_url'] = '/completed/'
         context['request'] = type('obj', (object,), {'path': current_path})()
         
-        # RequestContextを使用してstaticタグを正しく処理
-        factory = RequestFactory()
-        request = factory.get(current_path)
-        request_context = RequestContext(request, context)
-        
-        template = get_template(template_name)
-        html = template.render(request_context)
+        # render_to_stringを使用（RequestContextを自動的に処理）
+        html = render_to_string(template_name, context)
         
         # {% static 'path' %} を相対パスに変換
         # 出力パスに基づいて相対パスを計算
@@ -136,7 +131,7 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         
         # {% include %} タグは既に処理されているはずだが、残っている場合は警告
         if '{% include' in html:
-            print(f"警告: {% include %} タグが残っている可能性があります")
+            print("警告: {% include %} タグが残っている可能性があります")
         
         # 出力ディレクトリを作成
         ensure_dir(output_path.parent)
@@ -188,7 +183,6 @@ def verify_generated_files():
         OUTPUT_DIR / 'index.html',
         OUTPUT_DIR / 'overdue' / 'index.html',
         OUTPUT_DIR / 'completed' / 'index.html',
-        OUTPUT_DIR / '.nojekyll',
     ]
     
     all_ok = True
@@ -203,6 +197,14 @@ def verify_generated_files():
         else:
             print(f"✗ {file_path.relative_to(BASE_DIR)} (ファイルが存在しません)")
             all_ok = False
+    
+    # .nojekyllファイルの確認（空でも有効）
+    nojekyll_file = OUTPUT_DIR / '.nojekyll'
+    if nojekyll_file.exists():
+        print(f"✓ {nojekyll_file.relative_to(BASE_DIR)} (存在します - 空でも有効)")
+    else:
+        print(f"✗ {nojekyll_file.relative_to(BASE_DIR)} (ファイルが存在しません)")
+        all_ok = False
     
     # 静的ファイルディレクトリの確認
     if STATIC_DIR.exists():
