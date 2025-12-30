@@ -183,7 +183,6 @@ def verify_generated_files():
         OUTPUT_DIR / 'index.html',
         OUTPUT_DIR / 'overdue' / 'index.html',
         OUTPUT_DIR / 'completed' / 'index.html',
-        OUTPUT_DIR / '.nojekyll',
     ]
     
     all_ok = True
@@ -198,6 +197,14 @@ def verify_generated_files():
         else:
             print(f"✗ {file_path.relative_to(BASE_DIR)} (ファイルが存在しません)")
             all_ok = False
+    
+    # .nojekyllファイルの確認（空でも有効）
+    nojekyll_file = OUTPUT_DIR / '.nojekyll'
+    if nojekyll_file.exists():
+        print(f"✓ {nojekyll_file.relative_to(BASE_DIR)} (存在します - 空でも有効)")
+    else:
+        print(f"✗ {nojekyll_file.relative_to(BASE_DIR)} (ファイルが存在しません)")
+        all_ok = False
     
     # 静的ファイルディレクトリの確認
     if STATIC_DIR.exists():
