@@ -77,13 +77,8 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         context['completed_tasks_url'] = '/completed/'
         context['request'] = type('obj', (object,), {'path': current_path})()
         
-        # RequestContextを使用してstaticタグを正しく処理
-        factory = RequestFactory()
-        request = factory.get(current_path)
-        request_context = RequestContext(request, context)
-        
-        template = get_template(template_name)
-        html = template.render(request_context)
+        # render_to_stringを使用（RequestContextを自動的に処理）
+        html = render_to_string(template_name, context)
         
         # {% static 'path' %} を相対パスに変換
         # 出力パスに基づいて相対パスを計算
