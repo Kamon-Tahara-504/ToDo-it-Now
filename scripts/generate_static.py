@@ -116,6 +116,12 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         # {% url 'name' as variable %} パターンは既にコンテキストで処理されているので削除
         html = re.sub(r'\{%\s*url\s+(["\'])(.*?)\1\s+as\s+\w+\s*%\}', '', html)
         
+        # render_to_stringで既に展開されたURL変数を直接置換
+        # href="/overdue/"やhref="/completed/"、href="/tasks/"を/ToDo-it-Now/overdue/や/ToDo-it-Now/completed/、/ToDo-it-Now/tasks/に置換
+        html = re.sub(r'href="/(overdue|completed|tasks)/"', r'href="' + BASE_URL.rstrip('/') + r'/\1/"', html)
+        # ルートパスhref="/"も/ToDo-it-Now/に置換（ただし、外部URLや静的ファイルパスは除外）
+        html = re.sub(r'href="/(?!(static|https?://|ToDo-it-Now))"', r'href="' + BASE_URL.rstrip('/') + r'/"', html)
+        
         # 残りの未処理のDjangoテンプレートタグを削除
         html = re.sub(r'\{%\s*url\s+.*?%\}', '', html)
         
