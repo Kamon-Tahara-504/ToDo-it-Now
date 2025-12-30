@@ -4,6 +4,29 @@
 
 const TaskStorage = {
     STORAGE_KEY: 'tasks',
+    TEMPLATE_VERSION_KEY: 'template_version',
+    
+    /**
+     * テンプレートタスクを初期化
+     * sessionStorageが空の場合、またはテンプレートバージョンが異なる場合にテンプレートタスクを追加
+     */
+    initializeTemplateTasks: function() {
+        const tasksJson = sessionStorage.getItem(this.STORAGE_KEY);
+        const savedVersion = sessionStorage.getItem(this.TEMPLATE_VERSION_KEY);
+        const currentVersion = typeof TaskTemplates !== 'undefined' ? TaskTemplates.VERSION : null;
+        
+        // タスクが空、またはバージョンが異なる場合は新しいテンプレートタスクを初期化
+        if (typeof TaskTemplates !== 'undefined' && (!tasksJson || savedVersion !== currentVersion)) {
+            const templateTasks = TaskTemplates.getTemplateTasks();
+            this.saveAllTasks(templateTasks);
+            // バージョンを保存
+            if (currentVersion) {
+                sessionStorage.setItem(this.TEMPLATE_VERSION_KEY, currentVersion);
+            }
+            return templateTasks;
+        }
+        return [];
+    },
     
     /**
      * すべてのタスクを取得
@@ -12,7 +35,19 @@ const TaskStorage = {
     getAllTasks: function() {
         const tasksJson = sessionStorage.getItem(this.STORAGE_KEY);
         if (!tasksJson) {
-            return [];
+            // タスクが空の場合はテンプレートタスクを初期化
+            this.initializeTemplateTasks();
+            // 初期化後、再度取得
+            const newTasksJson = sessionStorage.getItem(this.STORAGE_KEY);
+            if (!newTasksJson) {
+                return [];
+            }
+            try {
+                return JSON.parse(newTasksJson);
+            } catch (e) {
+                console.error('タスクデータの読み込みに失敗しました:', e);
+                return [];
+            }
         }
         try {
             return JSON.parse(tasksJson);

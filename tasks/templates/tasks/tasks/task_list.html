@@ -26,10 +26,11 @@
 
 {% block extra_js %}
 {% load static %}
-<script src="{% static 'js/task_storage.js' %}"></script>
-<script src="{% static 'js/task_display.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // テンプレートタスクを初期化（sessionStorageが空の場合）
+    TaskStorage.initializeTemplateTasks();
+    
     // ソート方法を取得（URLパラメータから）
     const urlParams = new URLSearchParams(window.location.search);
     const sortBy = urlParams.get('sort') || 'created_desc';

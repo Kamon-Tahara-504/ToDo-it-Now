@@ -139,6 +139,18 @@ const TaskDisplay = {
                 }
             });
         });
+        
+        // 編集ボタンのイベントリスナーを追加
+        container.querySelectorAll('[data-action="edit"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = this.getAttribute('data-task-id');
+                if (taskId && typeof handleEditTaskClick === 'function') {
+                    handleEditTaskClick(taskId);
+                }
+            });
+        });
     },
     
     /**
