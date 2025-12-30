@@ -11,18 +11,46 @@
         </div>
         {% include 'tasks/includes/create_task_button.html' %}
     </h2>
-    {% if tasks %}
-        {% for task in tasks %}
-            {% include 'tasks/includes/task_card.html' with task=task show_share=False show_edit=False show_complete=False show_delete=True show_completed_at=True %}
-        {% endfor %}
-    {% else %}
+    <div id="taskListContainer">
         <div class="empty-message">
             <p>完了済みのタスクはありません。</p>
         </div>
-    {% endif %}
+    </div>
 </div>
 
 {% include 'tasks/includes/modals/delete_modal.html' %}
 {% include 'tasks/includes/modals/create_task_modal.html' with form=form %}
 {% include 'tasks/includes/modals/edit_task_modal.html' %}
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // テンプレートタスクを初期化（sessionStorageが空の場合）
+    TaskStorage.initializeTemplateTasks();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortBy = urlParams.get('sort') || 'created_desc';
+    
+    let tasks = TaskStorage.getCompletedTasks();
+    tasks = TaskStorage.sortTasks(tasks, sortBy);
+    
+    TaskDisplay.renderTasks(tasks, 'taskListContainer', {
+        showShare: false,
+        showEdit: false,
+        showComplete: false,
+        showDelete: true,
+        showCompletedAt: true
+    });
+    
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sortValue = this.getAttribute('data-sort');
+            window.location.href = `?sort=${sortValue}`;
+        });
+    });
+});
+</script>
 {% endblock %}

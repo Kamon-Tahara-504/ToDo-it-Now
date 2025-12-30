@@ -11,20 +11,53 @@
         </div>
         {% include 'tasks/includes/create_task_button.html' %}
     </h2>
-    {% if tasks %}
-        {% for task in tasks %}
-            {% include 'tasks/includes/task_card.html' with task=task show_share=True show_edit=True show_complete=True show_delete=True show_completed_at=False %}
-        {% endfor %}
-    {% else %}
+    <div id="taskListContainer">
         <div class="empty-message">
             <p>タスクはありません。</p>
         </div>
-    {% endif %}
+    </div>
 </div>
 
-{% include 'tasks/includes/modals/share_modal.html' %}
 {% include 'tasks/includes/modals/complete_modal.html' %}
 {% include 'tasks/includes/modals/delete_modal.html' %}
 {% include 'tasks/includes/modals/create_task_modal.html' with form=form %}
 {% include 'tasks/includes/modals/edit_task_modal.html' %}
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // テンプレートタスクを初期化（sessionStorageが空の場合）
+    TaskStorage.initializeTemplateTasks();
+    
+    // ソート方法を取得（URLパラメータから）
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortBy = urlParams.get('sort') || 'created_desc';
+    
+    // アクティブなタスクを取得
+    let tasks = TaskStorage.getActiveTasks();
+    
+    // ソート
+    tasks = TaskStorage.sortTasks(tasks, sortBy);
+    
+    // タスクを表示
+    TaskDisplay.renderTasks(tasks, 'taskListContainer', {
+        showShare: false,
+        showEdit: true,
+        showComplete: true,
+        showDelete: true,
+        showCompletedAt: false
+    });
+    
+    // ソートボタンのイベントリスナー
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sortValue = this.getAttribute('data-sort');
+            window.location.href = `?sort=${sortValue}`;
+        });
+    });
+});
+</script>
 {% endblock %}

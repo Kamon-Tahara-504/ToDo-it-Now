@@ -11,19 +11,47 @@
         </div>
         {% include 'tasks/includes/create_task_button.html' %}
     </h2>
-    {% if overdue_tasks %}
-        {% for task in overdue_tasks %}
-            {% include 'tasks/includes/task_card.html' with task=task show_share=False show_edit=True show_complete=True show_delete=True show_completed_at=False %}
-        {% endfor %}
-    {% else %}
+    <div id="taskListContainer">
         <div class="empty-message">
             <p>期限切れのタスクはありません。</p>
         </div>
-    {% endif %}
+    </div>
 </div>
 
 {% include 'tasks/includes/modals/complete_modal.html' %}
 {% include 'tasks/includes/modals/delete_modal.html' %}
 {% include 'tasks/includes/modals/create_task_modal.html' with form=form %}
 {% include 'tasks/includes/modals/edit_task_modal.html' %}
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // テンプレートタスクを初期化（sessionStorageが空の場合）
+    TaskStorage.initializeTemplateTasks();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortBy = urlParams.get('sort') || 'created_desc';
+    
+    let tasks = TaskStorage.getOverdueTasks();
+    tasks = TaskStorage.sortTasks(tasks, sortBy);
+    
+    TaskDisplay.renderTasks(tasks, 'taskListContainer', {
+        showShare: false,
+        showEdit: true,
+        showComplete: true,
+        showDelete: true,
+        showCompletedAt: false
+    });
+    
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sortValue = this.getAttribute('data-sort');
+            window.location.href = `?sort=${sortValue}`;
+        });
+    });
+});
+</script>
 {% endblock %}
