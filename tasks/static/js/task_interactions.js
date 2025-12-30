@@ -410,7 +410,7 @@ function handleEditTaskClick(taskId) {
     colorDiv.className = 'mb-3';
     const currentColor = task.color || '#ffffff';
     colorDiv.innerHTML = `
-        <label for="edit_color" style="color: var(--dark-brown);">色を選択</label><br>
+        <label for="edit_color-input" style="color: var(--dark-brown);">色を選択</label><br>
         <div class="btn-group" role="group" aria-label="Color selection">
             <button type="button" class="btn" style="background-color: #A8DADC;" data-color-picker="#A8DADC" data-color-input="edit_color-input">
                 <span class="visually-hidden">色1</span>
