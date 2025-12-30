@@ -10,8 +10,7 @@
         </button>
         <div class="validation-section">
             <h6>新規タスク作成</h6>
-            <form method="post" action="{% url 'add_task' %}" id="createTaskForm">
-                {% csrf_token %}
+            <form method="post" action="#" id="createTaskForm">
                 <div class="mb-3">
                     <label for="id_title">タイトル</label>
                     {{ form.title }}

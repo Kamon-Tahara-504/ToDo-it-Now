@@ -8,26 +8,9 @@
         <div class="d-flex align-items-center">
             <span class="me-3">みんなのタスク</span>
         </div>
-        {% include 'tasks/includes/create_task_button.html' %}
     </h2>
-
-    {% if tasks %}
-        {% for task in tasks %}
-            {% include 'tasks/includes/task_card_shared.html' with task=task %}
-        {% endfor %}
-    {% else %}
-        <div class="empty-message">
-            <p>共有しているタスクはありません。</p>
-        </div>
-    {% endif %}
+    <div class="empty-message">
+        <p>匿名ユーザー向けのため、共有機能は利用できません。</p>
+    </div>
 </div>
-
-{% include 'tasks/includes/modals/unshare_modal.html' %}
-{% include 'tasks/includes/modals/create_task_modal.html' with form=form %}
-{% include 'tasks/includes/modals/edit_task_modal.html' %}
-{% endblock %}
-
-{% block extra_js %}
-{% load static %}
-<script src="{% static 'js/shared_tasks.js' %}"></script>
 {% endblock %}

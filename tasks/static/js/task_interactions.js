@@ -263,6 +263,8 @@ function initCreateTaskModal() {
     // フォーム送信処理
     if (form) {
         form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             // 既存のバリデーション処理を実行
             const deadlineInput = form.querySelector('input[name="deadline"]');
             const warningModal = document.getElementById('warningModal');
@@ -273,10 +275,9 @@ function initCreateTaskModal() {
                 
                 // 締切が現在時刻より前の場合、警告モーダルを表示
                 if (deadlineValue < now) {
-                    e.preventDefault();
                     warningModal.style.display = 'flex';
                     
-                    // 警告モーダルの「作成する」ボタンでフォームを送信
+                    // 警告モーダルの「作成する」ボタンでタスクを作成
                     const createButton = document.getElementById('createButton');
                     if (createButton) {
                         // 既存のイベントリスナーを削除するため、一度削除して再追加
@@ -284,8 +285,8 @@ function initCreateTaskModal() {
                         createButton.parentNode.replaceChild(newCreateButton, createButton);
                         newCreateButton.addEventListener('click', function() {
                             warningModal.style.display = 'none';
-                            // preventDefaultを解除して通常の送信を実行
-                            form.submit();
+                            // タスクを作成
+                            createTaskFromForm();
                         });
                     }
                     
@@ -302,9 +303,47 @@ function initCreateTaskModal() {
                 }
             }
             
-            // バリデーションが通った場合、通常のPOST送信を実行
-            // 既存のadd_taskビューが処理し、成功時はリダイレクトでページがリロードされる
+            // バリデーションが通った場合、タスクを作成
+            createTaskFromForm();
         });
+    }
+    
+    /**
+     * フォームからタスクを作成
+     */
+    function createTaskFromForm() {
+        const form = document.getElementById('createTaskForm');
+        if (!form) return;
+        
+        const formData = new FormData(form);
+        const taskData = {
+            title: formData.get('title') || '',
+            description: formData.get('description') || '',
+            deadline: formData.get('deadline') || null,
+            color: formData.get('color') || '#ffffff'
+        };
+        
+        // セッションストレージにタスクを保存
+        TaskStorage.createTask(taskData);
+        
+        // モーダルを閉じる
+        const createTaskModal = document.getElementById('createTaskModal');
+        if (createTaskModal) {
+            createTaskModal.style.display = 'none';
+        }
+        
+        // フォームをリセット
+        form.reset();
+        const colorInput = document.getElementById('color-input');
+        if (colorInput) {
+            colorInput.value = '#ffffff';
+        }
+        document.querySelectorAll('[data-color-picker]').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
+        // ページをリロードして表示を更新
+        window.location.reload();
     }
 }
 
@@ -335,177 +374,151 @@ function initEditTaskModal() {
                 formContainer.innerHTML = '<p>読み込み中...</p>';
             }
             
-            // AJAXでフォームを取得
-            fetch(`/task/${taskId}/edit/`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                credentials: 'same-origin'
-            })
-            .then(response => response.text())
-            .then(html => {
-                // HTMLからフォーム部分を抽出
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const formElement = doc.querySelector('#taskForm');
-                
-                if (formElement && formContainer) {
-                    // フォームをモーダル用に調整
-                    const form = formElement.cloneNode(true);
-                    form.id = 'editTaskForm';
-                    // action属性を設定
-                    form.action = `/task/${taskId}/edit/`;
-                    
-                    // 元のフォーム内のボタンとリンクを確実に削除
-                    // 送信ボタンを削除
-                    const submitButton = form.querySelector('button[type="submit"]');
-                    if (submitButton && submitButton.parentNode) {
-                        submitButton.parentNode.removeChild(submitButton);
-                    }
-                    
-                    // キャンセルリンクを削除
-                    const cancelLink = form.querySelector('a[href*="task_list"]');
-                    if (cancelLink && cancelLink.parentNode) {
-                        cancelLink.parentNode.removeChild(cancelLink);
-                    }
-                    
-                    // btn-secondaryクラスの要素（灰色のキャンセルボタンなど）をすべて削除
-                    // カラーピッカーのボタンは除外
-                    const secondaryButtons = form.querySelectorAll('.btn-secondary');
-                    secondaryButtons.forEach(btn => {
-                        if (btn && btn.parentNode) {
-                            // カラーピッカーのボタンは除外
-                            if (!btn.closest('.btn-group[role="group"][aria-label="Color selection"]')) {
-                                btn.parentNode.removeChild(btn);
-                            }
-                        }
-                    });
-                    
-                    // btn-successクラスの要素（元の送信ボタンなど）をすべて削除
-                    // カラーピッカーのボタンは除外
-                    const successButtons = form.querySelectorAll('.btn-success');
-                    successButtons.forEach(btn => {
-                        if (btn && btn.parentNode) {
-                            // カラーピッカーのボタンは除外
-                            if (!btn.closest('.btn-group[role="group"][aria-label="Color selection"]')) {
-                                btn.parentNode.removeChild(btn);
-                            }
-                        }
-                    });
-                    
-                    // タスク作成モーダルと同じ構造でボタンを作成
-                    // 送信ボタンをモーダル用に作成（タスク作成モーダルと同じ構造）
-                    const newSubmitButton = document.createElement('button');
-                    newSubmitButton.type = 'submit';
-                    newSubmitButton.className = 'btn btn-create';
-                    newSubmitButton.id = 'submitEditTask';
-                    newSubmitButton.innerHTML = '<i class="fas fa-check"></i> 保存';
-                    
-                    // キャンセルボタンをモーダル用に作成（タスク作成モーダルと同じ構造）
-                    const cancelButton = document.createElement('button');
-                    cancelButton.type = 'button';
-                    cancelButton.className = 'btn btn-cancel';
-                    cancelButton.id = 'cancelEditTask';
-                    cancelButton.innerHTML = '<i class="fas fa-times"></i> キャンセル';
-                    
-                    // タスク作成モーダルと同じ構造でmodal-buttonsコンテナを作成
-                    const buttonsContainer = document.createElement('div');
-                    buttonsContainer.className = 'modal-buttons';
-                    
-                    // タスク作成モーダルと同じ順序でボタンを追加（送信→キャンセル）
-                    buttonsContainer.appendChild(newSubmitButton);
-                    buttonsContainer.appendChild(cancelButton);
-                    
-                    // カラーピッカーを取得
-                    const colorPicker = form.querySelector('.btn-group[role="group"][aria-label="Color selection"]');
-                    
-                    // カラーピッカーの後にmodal-buttonsコンテナを追加（タスク作成モーダルと同じ構造）
-                    if (colorPicker && colorPicker.parentNode) {
-                        // カラーピッカーの親要素（form）に、カラーピッカーの直後に追加
-                        if (colorPicker.nextSibling) {
-                            colorPicker.parentNode.insertBefore(buttonsContainer, colorPicker.nextSibling);
-                        } else {
-                            // nextSiblingがnullの場合は、appendChildで追加
-                            colorPicker.parentNode.appendChild(buttonsContainer);
-                        }
-                    } else {
-                        // カラーピッカーが見つからない場合は、フォームの最後に追加
-                        form.appendChild(buttonsContainer);
-                    }
-                    
-                    // フォームをコンテナに挿入
-                    formContainer.innerHTML = '';
-                    formContainer.appendChild(form);
-                    
-                    // カラーピッカーの初期化
-                    if (typeof initColorPicker === 'function') {
-                        initColorPicker();
-                    }
-                    
-                    // フォーム送信処理を追加
-                    const editForm = document.getElementById('editTaskForm');
-                    if (editForm) {
-                        editForm.addEventListener('submit', function(e) {
-                            // 既存のバリデーション処理を実行
-                            const deadlineInput = editForm.querySelector('input[name="deadline"]');
-                            const warningModal = document.getElementById('warningModal');
-                            
-                            if (deadlineInput && deadlineInput.value && warningModal) {
-                                const deadlineValue = new Date(deadlineInput.value);
-                                const now = new Date();
-                                
-                                // 締切が現在時刻より前の場合、警告モーダルを表示
-                                if (deadlineValue < now) {
-                                    e.preventDefault();
-                                    warningModal.style.display = 'flex';
-                                    
-                                    // 警告モーダルの「作成する」ボタンでフォームを送信
-                                    const createButton = document.getElementById('createButton');
-                                    if (createButton) {
-                                        // 既存のイベントリスナーを削除するため、一度削除して再追加
-                                        const newCreateButton = createButton.cloneNode(true);
-                                        createButton.parentNode.replaceChild(newCreateButton, createButton);
-                                        newCreateButton.addEventListener('click', function() {
-                                            warningModal.style.display = 'none';
-                                            // preventDefaultを解除して通常の送信を実行
-                                            editForm.submit();
-                                        });
-                                    }
-                                    
-                                    // 警告モーダルの「作成しない」ボタンでモーダルを閉じる
-                                    const cancelButton = document.getElementById('cancelButton');
-                                    if (cancelButton) {
-                                        const newCancelButton = cancelButton.cloneNode(true);
-                                        cancelButton.parentNode.replaceChild(newCancelButton, cancelButton);
-                                        newCancelButton.addEventListener('click', function() {
-                                            warningModal.style.display = 'none';
-                                        });
-                                    }
-                                    return;
-                                }
-                            }
-                            
-                            // バリデーションが通った場合、通常のPOST送信を実行
-                            // 既存のedit_taskビューが処理し、成功時はリダイレクトでページがリロードされる
-                        });
-                    }
-                    
-                    // モーダルを開く
-                    editTaskModal.style.display = 'flex';
-                } else {
-                    console.error('フォームが見つかりませんでした');
-                    if (formContainer) {
-                        formContainer.innerHTML = '<p>エラー: フォームの読み込みに失敗しました</p>';
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('エラー:', error);
+            // セッションストレージからタスクを取得
+            const task = TaskStorage.getTask(parseInt(taskId));
+            if (!task) {
+                console.error('タスクが見つかりませんでした');
                 if (formContainer) {
-                    formContainer.innerHTML = '<p>エラー: フォームの読み込みに失敗しました</p>';
+                    formContainer.innerHTML = '<p>エラー: タスクが見つかりませんでした</p>';
                 }
+                return;
+            }
+            
+            // フォームを動的に作成
+            const form = document.createElement('form');
+            form.id = 'editTaskForm';
+            form.method = 'post';
+            
+            // タイトル
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'mb-3';
+            titleDiv.innerHTML = `
+                <label for="edit_title">タイトル</label>
+                <input type="text" name="title" id="edit_title" class="form-control" value="${TaskDisplay.escapeHtml(task.title)}" required>
+            `;
+            form.appendChild(titleDiv);
+            
+            // メモ
+            const descriptionDiv = document.createElement('div');
+            descriptionDiv.className = 'mb-3';
+            descriptionDiv.innerHTML = `
+                <label for="edit_description">メモ</label>
+                <textarea name="description" id="edit_description" class="form-control" rows="3">${TaskDisplay.escapeHtml(task.description || '')}</textarea>
+            `;
+            form.appendChild(descriptionDiv);
+            
+            // 達成期日
+            const deadlineDiv = document.createElement('div');
+            deadlineDiv.className = 'mb-3';
+            const deadlineValue = task.deadline ? new Date(task.deadline).toISOString().slice(0, 16) : '';
+            deadlineDiv.innerHTML = `
+                <label for="edit_deadline">達成期日</label>
+                <input type="datetime-local" name="deadline" id="edit_deadline" class="form-control" value="${deadlineValue}">
+            `;
+            form.appendChild(deadlineDiv);
+            
+            // カラーピッカー（簡易版）
+            const colorDiv = document.createElement('div');
+            colorDiv.className = 'mb-3';
+            colorDiv.innerHTML = `
+                <label for="edit_color">色</label>
+                <input type="color" name="color" id="edit_color" class="form-control" value="${task.color || '#ffffff'}">
+            `;
+            form.appendChild(colorDiv);
+            
+            // ボタン
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'modal-buttons';
+            buttonsContainer.innerHTML = `
+                <button type="submit" class="btn btn-create" id="submitEditTask">
+                    <i class="fas fa-check"></i> 保存
+                </button>
+                <button type="button" class="btn btn-cancel" id="cancelEditTask">
+                    <i class="fas fa-times"></i> キャンセル
+                </button>
+            `;
+            form.appendChild(buttonsContainer);
+            
+            // フォームをコンテナに挿入
+            if (formContainer) {
+                formContainer.innerHTML = '';
+                formContainer.appendChild(form);
+            }
+            
+            // フォーム送信処理を追加
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 既存のバリデーション処理を実行
+                const deadlineInput = form.querySelector('input[name="deadline"]');
+                const warningModal = document.getElementById('warningModal');
+                
+                if (deadlineInput && deadlineInput.value && warningModal) {
+                    const deadlineValue = new Date(deadlineInput.value);
+                    const now = new Date();
+                    
+                    // 締切が現在時刻より前の場合、警告モーダルを表示
+                    if (deadlineValue < now) {
+                        warningModal.style.display = 'flex';
+                        
+                        // 警告モーダルの「作成する」ボタンでタスクを更新
+                        const createButton = document.getElementById('createButton');
+                        if (createButton) {
+                            const newCreateButton = createButton.cloneNode(true);
+                            createButton.parentNode.replaceChild(newCreateButton, createButton);
+                            newCreateButton.addEventListener('click', function() {
+                                warningModal.style.display = 'none';
+                                updateTaskFromForm(taskId);
+                            });
+                        }
+                        
+                        // 警告モーダルの「作成しない」ボタンでモーダルを閉じる
+                        const cancelButton = document.getElementById('cancelButton');
+                        if (cancelButton) {
+                            const newCancelButton = cancelButton.cloneNode(true);
+                            cancelButton.parentNode.replaceChild(newCancelButton, cancelButton);
+                            newCancelButton.addEventListener('click', function() {
+                                warningModal.style.display = 'none';
+                            });
+                        }
+                        return;
+                    }
+                }
+                
+                // バリデーションが通った場合、タスクを更新
+                updateTaskFromForm(taskId);
             });
+            
+            // モーダルを開く
+            editTaskModal.style.display = 'flex';
+            
+            /**
+             * フォームからタスクを更新
+             */
+            function updateTaskFromForm(taskId) {
+                const editForm = document.getElementById('editTaskForm');
+                if (!editForm) return;
+                
+                const formData = new FormData(editForm);
+                const taskData = {
+                    title: formData.get('title') || '',
+                    description: formData.get('description') || '',
+                    deadline: formData.get('deadline') || null,
+                    color: formData.get('color') || '#ffffff'
+                };
+                
+                // セッションストレージでタスクを更新
+                TaskStorage.updateTask(parseInt(taskId), taskData);
+                
+                // モーダルを閉じる
+                editTaskModal.style.display = 'none';
+                if (formContainer) {
+                    formContainer.innerHTML = '';
+                }
+                
+                // ページをリロードして表示を更新
+                window.location.reload();
+            }
         });
     });
 
