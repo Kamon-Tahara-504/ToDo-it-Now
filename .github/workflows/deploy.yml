@@ -37,6 +37,29 @@ jobs:
         run: |
           python scripts/generate_static.py
 
+      - name: Verify generated files
+        run: |
+          echo "=== 生成されたファイルの確認 ==="
+          ls -la docs/ || echo "docsディレクトリが存在しません"
+          ls -la docs/static/ 2>/dev/null || echo "staticディレクトリが存在しません"
+          echo ""
+          echo "=== index.htmlの存在確認 ==="
+          if [ -f docs/index.html ]; then
+            echo "✓ index.htmlが存在します"
+            echo "ファイルサイズ: $(wc -c < docs/index.html) bytes"
+            echo "最初の10行:"
+            head -10 docs/index.html
+          else
+            echo "✗ index.htmlが存在しません"
+          fi
+          echo ""
+          echo "=== .nojekyllファイルの確認 ==="
+          if [ -f docs/.nojekyll ]; then
+            echo "✓ .nojekyllファイルが存在します"
+          else
+            echo "✗ .nojekyllファイルが存在しません"
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
