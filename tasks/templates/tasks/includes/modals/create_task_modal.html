@@ -13,15 +13,27 @@
             <form method="post" action="#" id="createTaskForm">
                 <div class="mb-3">
                     <label for="id_title">タイトル</label>
-                    {{ form.title }}
+                    {% if form %}
+                        {{ form.title }}
+                    {% else %}
+                        <input type="text" id="id_title" name="title" class="form-control" required>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_description">メモ</label>
-                    {{ form.description }}
+                    {% if form %}
+                        {{ form.description }}
+                    {% else %}
+                        <textarea id="id_description" name="description" class="form-control" rows="3"></textarea>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_deadline">達成期日</label>
-                    {{ form.deadline }}
+                    {% if form %}
+                        {{ form.deadline }}
+                    {% else %}
+                        <input type="datetime-local" id="id_deadline" name="deadline" class="form-control">
+                    {% endif %}
                 </div>
                 {% include 'tasks/includes/color_picker.html' with current_color='#ffffff' %}
                 <div class="modal-buttons">
