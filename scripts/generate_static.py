@@ -84,7 +84,12 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         # render_to_stringを使用（RequestContextを自動的に処理）
         html = render_to_string(template_name, context)
         
-        # {% static 'path' %} を絶対パスに変換（BASE_URLを含む）
+        # render_to_stringが既に{% static %}タグを処理して/static/パスを生成しているため、
+        # 生成されたHTML内の/static/パスを直接/ToDo-it-Now/static/に置換
+        # href="/static/... や src="/static/... のパターンを置換
+        html = re.sub(r'(href|src)="/static/', r'\1="' + BASE_URL.rstrip('/') + '/static/', html)
+        
+        # 念のため、残っている{% static %}タグも処理（通常は存在しないはず）
         def replace_static(match):
             path = match.group(1).strip('\'"')
             # BASE_URL + 'static/' + path の形式に変換
