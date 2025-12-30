@@ -49,9 +49,23 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         context = {}
     
     try:
+        # 出力パスに基づいて現在のパスを決定
+        if 'overdue' in str(output_path):
+            current_path = '/overdue/'
+        elif 'completed' in str(output_path):
+            current_path = '/completed/'
+        else:
+            current_path = '/'
+        
+        # URL変数をコンテキストに追加
+        context['task_list_url'] = '/'
+        context['overdue_tasks_url'] = '/overdue/'
+        context['completed_tasks_url'] = '/completed/'
+        context['request'] = type('obj', (object,), {'path': current_path})()
+        
         # RequestContextを使用してstaticタグを正しく処理
         factory = RequestFactory()
-        request = factory.get('/')
+        request = factory.get(current_path)
         request_context = RequestContext(request, context)
         
         template = get_template(template_name)
@@ -68,6 +82,28 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
             return static_prefix + path
         
         html = re.sub(r'\{%\s*static\s+(["\'])(.*?)\1\s*%\}', replace_static, html)
+        
+        # {% url 'name' %} パターンを相対パスに変換
+        url_mapping = {
+            'task_list': '/',
+            'overdue_tasks': '/overdue/',
+            'completed_tasks': '/completed/',
+            'index': '/',
+        }
+        
+        def replace_url(match):
+            url_name = match.group(1).strip('\'"')
+            if url_name in url_mapping:
+                return url_mapping[url_name]
+            return '/'
+        
+        html = re.sub(r'\{%\s*url\s+(["\'])(.*?)\1\s*%\}', replace_url, html)
+        
+        # {% url 'name' as variable %} パターンは既にコンテキストで処理されているので削除
+        html = re.sub(r'\{%\s*url\s+(["\'])(.*?)\1\s+as\s+\w+\s*%\}', '', html)
+        
+        # 残りの未処理のDjangoテンプレートタグを削除
+        html = re.sub(r'\{%\s*url\s+.*?%\}', '', html)
         
         # 出力ディレクトリを作成
         ensure_dir(output_path.parent)
@@ -140,6 +176,10 @@ def generate_static_site():
     <script>window.location.href = '/';</script>
 </body>
 </html>''')
+    
+    # .nojekyllファイルを作成（Jekyllの処理をスキップ）
+    with open(OUTPUT_DIR / '.nojekyll', 'w', encoding='utf-8') as f:
+        f.write('')
     
     print("静的サイトの生成が完了しました！")
 
