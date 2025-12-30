@@ -136,7 +136,7 @@ def render_template_to_html(template_name, output_path, context=None, base_path=
         
         # {% include %} タグは既に処理されているはずだが、残っている場合は警告
         if '{% include' in html:
-            print(f"警告: {% include %} タグが残っている可能性があります")
+            print("警告: {% include %} タグが残っている可能性があります")
         
         # 出力ディレクトリを作成
         ensure_dir(output_path.parent)
